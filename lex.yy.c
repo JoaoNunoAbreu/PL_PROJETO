@@ -166,20 +166,7 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex. 
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                yy_size_t yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
+    #define YY_LESS_LINENO(n)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -376,8 +363,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 6
-#define YY_END_OF_BUFFER 7
+#define YY_NUM_RULES 7
+#define YY_END_OF_BUFFER 8
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -385,17 +372,11 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[83] =
+static yyconst flex_int16_t yy_accept[30] =
     {   0,
-        0,    0,    7,    5,    5,    5,    0,    0,    0,    0,
-        0,    0,    0,    0,    4,    4,    0,    0,    0,    0,
+        0,    0,    0,    0,    8,    6,    6,    6,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    1,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    2,    0,
-        3,    0
+        2,    3,    3,    0,    5,    5,    4,    1,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -403,17 +384,17 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    3,    1,    4,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    5,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    6,
-        7,    8,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    3,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    4,
+        1,    5,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    9,    1,   10,    1,   11,   12,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 
-       13,   14,    1,   15,   16,    1,   17,   18,   19,   20,
-       21,   22,    1,   23,   24,   25,   26,    1,   27,    1,
-        1,   28,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    6,    1,    1,    7,    1,    1,
+        8,    9,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -430,79 +411,44 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[29] =
+static yyconst flex_int32_t yy_meta[10] =
     {   0,
-        1,    1,    1,    2,    1,    3,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1
+        1,    1,    1,    2,    1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[88] =
+static yyconst flex_int16_t yy_base[34] =
     {   0,
-        0,    1,   97,   98,    0,   83,   92,   86,   75,    0,
-       90,   84,   72,   66,    0,   86,   83,   76,   72,   64,
-       59,   68,   60,   56,   72,   64,   70,   72,   54,   70,
-       68,   54,   60,   44,   51,   47,   42,   45,   46,   48,
-       36,   43,   43,   56,   46,   42,   49,   36,   27,    0,
-       29,   43,    0,   43,   39,   41,   28,   26,   24,   33,
-       40,   21,   21,   23,   28,   30,   16,   20,   23,   17,
-        5,    0,    0,    0,    7,    5,    0,    0,    0,    0,
-        0,   98,   24,   27,   29,   31,   34
+       27,   26,   25,   24,   27,   32,    0,    7,   19,   18,
+       19,   15,   17,   15,   10,   12,    6,   10,    6,    2,
+       32,    0,    4,    0,    0,    2,   32,   32,   32,   16,
+       18,    1,    0
     } ;
 
-static yyconst flex_int16_t yy_def[88] =
+static yyconst flex_int16_t yy_def[34] =
     {   0,
-       83,   83,   82,   82,   82,   82,   82,   82,   82,   82,
-       84,   82,   82,   82,   84,   84,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   85,
-       82,   82,   85,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   86,   82,   86,   87,
-       87,    0,   82,   82,   82,   82,   82
+       30,   30,   30,   30,   29,   29,   29,   29,   29,   29,
+       29,   29,   29,   29,   31,   32,   29,   33,   29,   31,
+       29,   32,   32,   29,   33,   33,   29,   29,    0,   29,
+       29,   29,   29
     } ;
 
-static yyconst flex_int16_t yy_nxt[127] =
+static yyconst flex_int16_t yy_nxt[42] =
     {   0,
-       82,   82,   82,   82,   82,    5,    5,   80,   78,    7,
-       13,   77,   82,   82,   14,   82,   76,   75,   82,   74,
-       73,    8,    6,    6,    4,    4,    4,   15,   15,   53,
-       53,   79,   72,   79,   81,   81,   71,   70,   69,   68,
-       67,   66,   65,   64,   63,   62,   61,   60,   59,   58,
-       57,   56,   55,   54,   52,   51,   50,   49,   48,   47,
-       46,   45,   44,   43,   42,   41,   40,   39,   38,   37,
-       36,   35,   34,   33,   32,   31,   30,   29,   28,   27,
-       26,   25,   24,   23,   22,   21,   20,   16,   19,   18,
-       17,   16,   12,   11,   10,    9,   82,    3,   82,   82,
-
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82
+       25,   22,    9,   26,   28,   23,   21,   10,   11,   12,
+       27,   26,   24,   23,   21,   13,    6,    6,   20,   20,
+       19,   18,   17,   16,   15,   14,   29,    8,    8,    7,
+        7,    5,   29,   29,   29,   29,   29,   29,   29,   29,
+       29
     } ;
 
-static yyconst flex_int16_t yy_chk[127] =
+static yyconst flex_int16_t yy_chk[42] =
     {   0,
-        0,    0,    0,    0,    0,    1,    2,   78,   76,    5,
-       10,   75,    0,    0,   10,    0,   74,   73,    0,   72,
-       71,    5,    1,    2,   83,   83,   83,   84,   84,   85,
-       85,   86,   70,   86,   87,   87,   69,   68,   67,   66,
-       65,   64,   63,   62,   61,   60,   59,   58,   57,   56,
-       55,   54,   52,   51,   49,   48,   47,   46,   45,   44,
-       43,   42,   41,   40,   39,   38,   37,   36,   35,   34,
-       33,   32,   31,   30,   29,   28,   27,   26,   25,   24,
-       23,   22,   21,   20,   19,   18,   17,   16,   14,   13,
-       12,   11,    9,    8,    7,    6,    3,   82,   82,   82,
-
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82,   82,   82,   82,   82,
-       82,   82,   82,   82,   82,   82
+       33,   32,    7,   26,   24,   23,   20,    7,    7,    8,
+       19,   18,   17,   16,   15,    8,   30,   30,   31,   31,
+       14,   13,   12,   11,   10,    9,    5,    4,    3,    2,
+        1,   29,   29,   29,   29,   29,   29,   29,   29,   29,
+       29
     } ;
-
-/* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[7] =
-    {   0,
-1, 1, 1, 1, 1, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -518,13 +464,17 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "publico2NetLang.l"
-#line 4 "publico2NetLang.l"
+#line 1 "tmp.l"
+#line 2 "tmp.l"
+    #include <stdio.h>
+    #include <string.h>
     #include <ctype.h>
     void strip_extra_spaces(char* str);
-#line 526 "lex.yy.c"
+
+#line 475 "lex.yy.c"
 
 #define INITIAL 0
+#define R 1
 
 #ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -601,6 +551,16 @@ static int input (void );
 
 #endif
 
+        static int yy_start_stack_ptr = 0;
+        static int yy_start_stack_depth = 0;
+        static int *yy_start_stack = NULL;
+    
+    static void yy_push_state (int new_state );
+    
+    static void yy_pop_state (void );
+    
+    static int yy_top_state (void );
+    
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
@@ -704,14 +664,13 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 8 "publico2NetLang.l"
+#line 11 "tmp.l"
 
 
-    int n = 0;
-    char* date;
-    char* timestamp;
+    int numberOfReplies = 0;
+    int hasReplies = 0;
 
-#line 715 "lex.yy.c"
+#line 674 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -764,13 +723,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 83 )
+				if ( yy_current_state >= 30 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 98 );
+		while ( yy_base[yy_current_state] != 32 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -782,16 +741,6 @@ yy_find_action:
 			}
 
 		YY_DO_BEFORE_ACTION;
-
-		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
-			{
-			yy_size_t yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
-				if ( yytext[yyl] == '\n' )
-					   
-    yylineno++;
-;
-			}
 
 do_action:	/* This label is used only to access EOF actions. */
 
@@ -805,59 +754,67 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-/* rule 1 can match eol */
 YY_RULE_SETUP
-#line 14 "publico2NetLang.l"
-{   // USER
-                                                    yytext[strlen(yytext-1)] = '\0'; // Para tirar o último espaço
-                                                    printf("user = %s\n",yytext+15);
-                                                }
+#line 16 "tmp.l"
+{ 
+                                    yy_pop_state(); 
+                                }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 18 "publico2NetLang.l"
-{   // ID
-                                                    printf("id = %s\n",yytext+28);
-                                                }
+#line 19 "tmp.l"
+{ 
+                                    hasReplies = 1;
+                                    yy_push_state(R);
+                                }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 21 "publico2NetLang.l"
-{   // DATE AND TIMESTAMP
-                                                    char* token = strtok(yytext+30, " ");
-                                                    date = strdup(token);
-                                                    token = strtok(NULL, "-"); 
-                                                    timestamp = strdup(token);
-                                                    printf("date = %s\ntimestamp = %s\n", date,timestamp);
-                                                }
+#line 23 "tmp.l"
+{
+                                    strip_extra_spaces(yytext+3);
+                                    printf("commentText = %s\n",yytext+3);
+                                }
 	YY_BREAK
 case 4:
-/* rule 4 can match eol */
 YY_RULE_SETUP
-#line 28 "publico2NetLang.l"
-{   // COMMENTTEXT
-                                                    strip_extra_spaces(yytext+3);
-                                                    printf("commentText = %s\n",yytext+3);
-                                                }
+#line 27 "tmp.l"
+{
+                                    printf("numberOfReplies Geral = %d\n",numberOfReplies);
+                                    printf("hasReplies Geral = %d\n",hasReplies);
+                                    numberOfReplies = 0;
+                                    hasReplies = 0;
+                                }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 32 "publico2NetLang.l"
-{}
-	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 33 "publico2NetLang.l"
-{printf("n = %d", n); return 0;}
+#line 33 "tmp.l"
+{
+                                    strip_extra_spaces(yytext+3);
+                                    printf("reply = %s\n",yytext+3);
+                                    numberOfReplies++;
+                                    printf("numberOfReplies Reply = %d\n",numberOfReplies);
+                                    printf("hasReplies Reply = %d\n",hasReplies);
+                                }
 	YY_BREAK
 case 6:
+/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 35 "publico2NetLang.l"
+#line 40 "tmp.l"
+
+	YY_BREAK
+case 7:
+YY_RULE_SETUP
+#line 41 "tmp.l"
 ECHO;
 	YY_BREAK
-#line 861 "lex.yy.c"
+#line 815 "lex.yy.c"
+case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(R):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1147,7 +1104,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 83 )
+			if ( yy_current_state >= 30 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1175,11 +1132,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 83 )
+		if ( yy_current_state >= 30 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 82);
+	yy_is_jam = (yy_current_state == 29);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1215,10 +1172,6 @@ static int yy_get_next_buffer (void)
 		}
 
 	*--yy_cp = (char) c;
-
-    if ( c == '\n' ){
-        --yylineno;
-    }
 
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
@@ -1294,11 +1247,6 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
-
-	if ( c == '\n' )
-		   
-    yylineno++;
-;
 
 	return c;
 }
@@ -1656,6 +1604,43 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len 
 	return b;
 }
 
+    static void yy_push_state (int  new_state )
+{
+    	if ( (yy_start_stack_ptr) >= (yy_start_stack_depth) )
+		{
+		yy_size_t new_size;
+
+		(yy_start_stack_depth) += YY_START_STACK_INCR;
+		new_size = (yy_start_stack_depth) * sizeof( int );
+
+		if ( ! (yy_start_stack) )
+			(yy_start_stack) = (int *) yyalloc(new_size  );
+
+		else
+			(yy_start_stack) = (int *) yyrealloc((void *) (yy_start_stack),new_size  );
+
+		if ( ! (yy_start_stack) )
+			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
+		}
+
+	(yy_start_stack)[(yy_start_stack_ptr)++] = YY_START;
+
+	BEGIN(new_state);
+}
+
+    static void yy_pop_state  (void)
+{
+    	if ( --(yy_start_stack_ptr) < 0 )
+		YY_FATAL_ERROR( "start-condition stack underflow" );
+
+	BEGIN((yy_start_stack)[(yy_start_stack_ptr)]);
+}
+
+    static int yy_top_state  (void)
+{
+    	return (yy_start_stack)[(yy_start_stack_ptr) - 1];
+}
+
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
 #endif
@@ -1769,15 +1754,16 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    /* We do not touch yylineno unless the option is enabled. */
-    yylineno =  1;
-    
     (yy_buffer_stack) = 0;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
     (yy_c_buf_p) = (char *) 0;
     (yy_init) = 0;
     (yy_start) = 0;
+
+    (yy_start_stack_ptr) = 0;
+    (yy_start_stack_depth) = 0;
+    (yy_start_stack) =  NULL;
 
 /* Defined in main.c */
 #ifdef YY_STDINIT
@@ -1808,6 +1794,10 @@ int yylex_destroy  (void)
 	/* Destroy the stack itself. */
 	yyfree((yy_buffer_stack) );
 	(yy_buffer_stack) = NULL;
+
+    /* Destroy the start condition stack. */
+        yyfree((yy_start_stack)  );
+        (yy_start_stack) = NULL;
 
     /* Reset the globals. This is important in a non-reentrant scanner so the next time
      * yylex() is called, initialization will occur. */
@@ -1864,10 +1854,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 35 "publico2NetLang.l"
+#line 41 "tmp.l"
 
 
 
+// Straight up copiada da net
 void strip_extra_spaces(char* str) {
   int i, x;
   for(i=x=0; str[i]; ++i)
@@ -1876,7 +1867,7 @@ void strip_extra_spaces(char* str) {
   str[x] = '\0';
 } 
 
-int main(int argc, char* argv[]){
+int main() {
     yylex();
     return 0;
 }
