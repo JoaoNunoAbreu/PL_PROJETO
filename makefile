@@ -6,4 +6,4 @@ install: publico2NetLang
 	cp publico2NetLang /usr/local/bin
 
 clean:
-	rm -f lex.yy.c
+	rm -f lex.yy.c publico2NetLang
