@@ -10,9 +10,10 @@
     int nr_likes = 0;
     char* date;
     char* timestamp;
-    char* comment = malloc(sizeof(char*));
+    char comment[10000] = {};
     Comment com;
     Comment piece;
+    int flag = 0;
 
 \<li                                                {   
                                                         piece = mkComment();
@@ -35,14 +36,17 @@
                                                         printfComment(com);
                                                         unmkComment(com);
                                                         yy_pop_state();
+                                                        memset(comment, 0, sizeof comment);
                                                     }
 <T>{
-[ ][ ]+                                             {}
-[\n\t\r]+                                           {}
+[ ][ ]+                                             {strcat(comment," ");}
+[\n\t\r]+                                           {} 
+\"                                                  {strcat(comment,"\\\"");}
 \<\/p\>                                             {setCommentText(piece,comment);yy_pop_state();}
-.                                                   {printf("entrou aqui");strcat(comment,yytext);}
+.                                                   {   
+                                                        strcat(comment,yytext); 
+                                                    }
 }
-
 <*>data\-comment\-id=\"[^"]+                        {   // ID
                                                         setId(piece,yytext+17);
                                                     }
@@ -60,8 +64,7 @@
                                                         token = strtok(NULL, "-"); 
                                                         setTime(piece,strdup(token));
                                                     }
-<*>\<p\>[^<]+                                       {   // MENSAGEM
-                                                        comment[0] = '\0';
+<*>\<p\>                                            {   // MENSAGEM
                                                         yy_push_state(T);
                                                     }
 <*>.|\n                                             {}
