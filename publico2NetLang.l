@@ -10,7 +10,7 @@
     int nr_likes = 0;
     char* date;
     char* timestamp;
-    char* comment;
+    char* comment = malloc(sizeof(char*));
     Comment com;
     Comment piece;
 
@@ -37,12 +37,12 @@
                                                         yy_pop_state();
                                                     }
 <T>{
-    [ ][ ]+                                         {}
-    [\n\r]                                          {}
-    \<\/p\>                                         {setCommentText(piece,comment);yy_pop_state();}
-    .+/[\n\r]                                       {comment = strdup(yytext);}
-    
+[ ][ ]+                                             {}
+[\n\t\r]+                                           {}
+\<\/p\>                                             {setCommentText(piece,comment);yy_pop_state();}
+.                                                   {printf("entrou aqui");strcat(comment,yytext);}
 }
+
 <*>data\-comment\-id=\"[^"]+                        {   // ID
                                                         setId(piece,yytext+17);
                                                     }
@@ -61,6 +61,7 @@
                                                         setTime(piece,strdup(token));
                                                     }
 <*>\<p\>[^<]+                                       {   // MENSAGEM
+                                                        comment[0] = '\0';
                                                         yy_push_state(T);
                                                     }
 <*>.|\n                                             {}
@@ -79,6 +80,6 @@ void strip_extra_spaces(char* str) {
 int main(int argc, char* argv[]){
     printf("{\n   \"commentThread\": [");
     yylex();
-    printf("        ]\n}");
+    printf("\n    ]\n}");
     return 0;
 }
