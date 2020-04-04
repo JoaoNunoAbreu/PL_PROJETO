@@ -7,16 +7,23 @@
 
 %%
     int nr_likes = 0;
+    int nr_comment = 0;
+    int nr_comment_total = 0;
     char* date;
     char* timestamp;
     char comment[10000] = {};
     Comment com;
     Comment piece;
 
+\[\<h3.+c                                           {   // Para saber o número total de comentários e respetivas respostas
+                                                        yytext[yyleng-2] = '\0';
+                                                        nr_comment_total = atoi(yytext+97);
+                                                    }
 \<li                                                {   // Início de um comentário principal
                                                         piece = mkComment();
                                                         com = piece;
                                                         yy_push_state(P);
+                                                        nr_comment++;
                                                     }
 <P>\<ol                                             {   // Início da lista replies
                                                         yy_push_state(R);
@@ -26,12 +33,13 @@
                                                     }
 <R>\<li                                             {   // Início de uma reply
                                                         piece = mkComment();
+                                                        nr_comment++;
                                                     }  
 <R>\<\/li>                                          {   // Fim de uma reply
                                                         addComment(com,piece);
                                                     }        
 <P>\<\/li>                                          {   // Fim de um comentário principal
-                                                        printfComment(com);
+                                                        printfComment(com,nr_comment,nr_comment_total);
                                                         unmkComment(com);
                                                         yy_pop_state();
                                                         memset(comment, 0, sizeof comment);

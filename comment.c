@@ -124,7 +124,7 @@ void printfReply(Comment c, int f)
         printf("\n          },");
 }
 
-void printfComment(Comment c)
+void printfComment(Comment c, int nr_comment, int nr_comment_total)
 {
 
     int i = 0;
@@ -148,5 +148,8 @@ void printfComment(Comment c)
         printf("\n        ]");
     else
         printf("]");
-    printf("\n      },");
+    if (nr_comment != nr_comment_total)
+        printf("\n      },");
+    else
+        printf("\n      }");
 }
