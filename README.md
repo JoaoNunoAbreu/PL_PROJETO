@@ -2,7 +2,7 @@
 
 ## Problemas
 
-* Replies estão sempre a por uma vírgula no fim
+* ~~Replies estão sempre a por uma vírgula no fim~~
 
 ## Enunciado
 

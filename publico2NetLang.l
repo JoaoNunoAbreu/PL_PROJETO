@@ -2,7 +2,7 @@
 %x P R T
 %{
     #include <ctype.h>
-    #include "comment.h"
+    #include "Comment.h"
     #include "Array.h"
 %}
 
