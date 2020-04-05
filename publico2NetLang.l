@@ -2,8 +2,8 @@
 %x P R T
 %{
     #include <ctype.h>
-    #include "Comment.h"
-    #include "Array.h"
+    #include "headers/Comment.h"
+    #include "headers/Array.h"
 %}
 
 %%
@@ -93,7 +93,7 @@
                                                         setTime(piece,strdup(token));
                                                     }
     \<p\>                                           {   // MENSAGEM
-                                                        initArray(&comment,15);
+                                                        initArray(&comment,13); // O comentário que encontramos que tinha menos caracteres foi 15.
                                                         yy_push_state(T);
                                                     }
 }

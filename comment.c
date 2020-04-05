@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "Comment.h"
+#include "headers/Comment.h"
 
 Comment mkComment()
 {
@@ -29,18 +29,6 @@ void unmkComment(Comment c)
     if (c && c->next)
     {
         unmkComment(c->next);
-    }
-}
-
-void freeList(Comment head)
-{
-    Comment tmp;
-
-    while (head != NULL)
-    {
-        tmp = head;
-        head = head->next;
-        free(tmp);
     }
 }
 
