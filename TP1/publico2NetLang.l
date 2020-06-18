@@ -1,9 +1,9 @@
 %option noyywrap yylineno stack
 %x P R T
 %{
-    #include <ctype.h>
-    #include "headers/Comment.h"
-    #include "headers/Array.h"
+#include <ctype.h>
+#include "headers/Comment.h"
+#include "headers/Array.h"
 %}
 
 %%
