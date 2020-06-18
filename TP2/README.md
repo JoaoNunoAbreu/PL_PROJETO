@@ -11,3 +11,4 @@
 
 * https://github.com/toml-lang/toml
 * https://en.wikipedia.org/wiki/TOML
+* https://toml-to-json.matiaskorhonen.fi/
