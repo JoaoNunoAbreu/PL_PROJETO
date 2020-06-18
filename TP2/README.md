@@ -4,5 +4,5 @@
 
 ## Enunciado
 
-![](https://imgur.com/a/gPp1CUL)
-![](https://imgur.com/a/d1abQRP)
+![](https://i.imgur.com/5nqINqo.png)
+![](https://i.imgur.com/fMGel2Q.png)
