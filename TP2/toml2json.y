@@ -1,4 +1,5 @@
 %{
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,14 +7,23 @@ int yylex();
 int yyerror(char* s);
 
 %}
-%token num
+%union{
+  char* s;
+  int n;
+}
+%token text 
+%type <s> text Pair Key Value
 %%
-Frase : '[' Lista ']'
+
+Lang  : Lang Pair '\n'          {printf("{\n\t%s\n}",$2);}
+      |                         
       ;
 
-Lista : num
-      | num ',' Lista
-      ;
+Pair  : Key '=' Value           {asprintf(&$$,"\"%s\" : \"%s\"",$1,$3);}
+
+Key   : text                    {$$ = $1;}
+
+Value : text                    {$$ = $1;}
 %%
 
 #include "lex.yy.c"
