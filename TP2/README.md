@@ -9,6 +9,7 @@
 
 ## Links úteis
 
-* https://github.com/toml-lang/toml
+* https://github.com/toml-lang/toml 
 * https://en.wikipedia.org/wiki/TOML
-* https://toml-to-json.matiaskorhonen.fi/
+* https://pseitz.github.io/toml-to-json-online-converter/
+* https://jsonlint.com/

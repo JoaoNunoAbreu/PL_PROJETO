@@ -2,28 +2,55 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 int yylex();
 int yyerror(char* s);
-
+int flag = 0;
 %}
 %union{
+
   char* s;
   int n;
+
+  union Data {
+    char* s;
+    int n;
+  } data;
+
+  struct Info{
+    int uniontype; // 0 - string, 1 - inteiro
+    union Data valor;
+  } info;
+  
+  
 }
-%token text 
-%type <s> text Pair Key Value
+
+%token text num val
+%type <s> text Pair Lang
+%type <n> num
+%type <info> Value Key val
 %%
 
-Lang  : Lang Pair '\n'          {printf("{\n\t%s\n}",$2);}
-      |                         
+TOML  : Lang                    {printf("{\t%s\n}",$1);}
+
+Lang  : Lang Pair '\n'          {if(!flag) {asprintf(&$$,"%s\n\t%s",$1,$2); flag = 1;}else asprintf(&$$,"%s,\n\t%s",$1,$2);}
+      |                         {$$ = "";}
       ;
 
-Pair  : Key '=' Value           {asprintf(&$$,"\"%s\" : \"%s\"",$1,$3);}
+Pair  : Key '=' Value           {
+                                    if($1.uniontype == 0 && $3.uniontype == 0)
+                                      asprintf(&$$,"\"%s\" : \"%s\"",$1.valor.s,$3.valor.s);
+                                    if($1.uniontype == 0 && $3.uniontype == 1)
+                                      asprintf(&$$,"\"%s\" : %d",$1.valor.s,$3.valor.n);  
+                                    if($1.uniontype == 1 && $3.uniontype == 0)
+                                      asprintf(&$$,"\"%d\" : \"%s\"",$1.valor.n,$3.valor.s);  
+                                    if($1.uniontype == 1 && $3.uniontype == 1)
+                                      asprintf(&$$,"\"%d\" : %d",$1.valor.n,$3.valor.n);    
+                                }
 
-Key   : text                    {$$ = $1;}
+Key   : val                     {$$ = $1;}
 
-Value : text                    {$$ = $1;}
+Value : val                     {$$ = $1;}
 %%
 
 #include "lex.yy.c"

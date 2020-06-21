@@ -376,8 +376,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 8
-#define YY_END_OF_BUFFER 9
+#define YY_NUM_RULES 15
+#define YY_END_OF_BUFFER 16
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -385,10 +385,12 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[21] =
+static yyconst flex_int16_t yy_accept[37] =
     {   0,
-        0,    0,    0,    0,    9,    7,    3,    2,    7,    1,
-        4,    3,    5,    8,    0,    6,    1,    4,    5,    0
+        0,    0,    0,    0,    0,    0,    0,    0,   16,   14,
+       15,   13,    6,   12,    7,    5,    4,    1,   14,   14,
+        2,   11,   11,    9,   11,   10,   11,   12,    7,    5,
+        0,    3,    0,    2,    8,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -396,17 +398,17 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    3,    1,    4,    5,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    6,    6,    6,
-        6,    6,    6,    6,    6,    6,    6,    1,    1,    1,
-        7,    1,    1,    1,    8,    8,    8,    8,    8,    8,
-        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-        1,    1,    1,    1,    1,    1,    8,    8,    8,    8,
+        1,    3,    1,    4,    5,    1,    1,    1,    6,    1,
+        1,    1,    1,    1,    7,    1,    1,    8,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    1,    1,    1,
+        9,    1,    1,    1,    7,    7,    7,    7,    7,    7,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        1,   10,    1,    1,    7,    1,    7,    7,    7,    7,
 
-        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-        8,    8,    1,    1,    1,    1,    1,    1,    1,    1,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -423,43 +425,51 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[9] =
+static yyconst flex_int32_t yy_meta[11] =
     {   0,
-        1,    2,    1,    1,    1,    1,    1,    1
+        1,    2,    1,    1,    1,    1,    3,    3,    1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[24] =
+static yyconst flex_int16_t yy_base[41] =
     {   0,
-        0,    0,    0,    0,   19,   20,   20,   20,   14,    0,
-       11,   20,    8,   20,   11,   20,    0,    8,    5,   20,
-        8,   11,   10
+        0,    0,    7,    0,   15,    0,   23,    0,   47,   48,
+       48,   48,   48,    0,    0,   38,   48,   48,   41,   38,
+       35,   48,   48,   48,    0,   48,   31,    0,    0,    0,
+       18,   48,   14,   10,   48,   48,   33,    9,   36,   39
     } ;
 
-static yyconst flex_int16_t yy_def[24] =
+static yyconst flex_int16_t yy_def[41] =
     {   0,
-       20,    1,   21,   21,   20,   20,   20,   20,   22,   23,
-       20,   20,   20,   20,   22,   20,   23,   20,   20,    0,
-       20,   20,   20
+       36,    1,    1,    3,    3,    5,   36,    7,   36,   36,
+       36,   36,   36,   37,   38,   38,   36,   36,   39,   40,
+       36,   36,   36,   36,   37,   36,   36,   37,   38,   16,
+       39,   36,   40,   36,   36,    0,   36,   36,   36,   36
     } ;
 
-static yyconst flex_int16_t yy_nxt[29] =
+static yyconst flex_int16_t yy_nxt[59] =
     {   0,
-        6,    7,    8,    9,   10,   11,   12,   13,   14,   14,
-       17,   15,   19,   18,   16,   19,   18,   16,   20,    5,
-       20,   20,   20,   20,   20,   20,   20,   20
+       10,   11,   12,   13,   14,   13,   15,   16,   17,   10,
+       10,   29,   10,   10,   10,   10,   18,   34,   19,   32,
+       20,   32,   21,   22,   11,   23,   24,   25,   26,   22,
+       22,   22,   27,   28,   35,   28,   31,   31,   31,   33,
+       33,   33,   34,   32,   32,   30,   36,    9,   36,   36,
+       36,   36,   36,   36,   36,   36,   36,   36
     } ;
 
-static yyconst flex_int16_t yy_chk[29] =
+static yyconst flex_int16_t yy_chk[59] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,   21,   21,
-       23,   22,   19,   18,   15,   13,   11,    9,    5,   20,
-       20,   20,   20,   20,   20,   20,   20,   20
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        3,   38,    3,    3,    3,    3,    5,   34,    5,   33,
+        5,   31,    5,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    7,   37,   27,   37,   39,   39,   39,   40,
+       40,   40,   21,   20,   19,   16,    9,   36,   36,   36,
+       36,   36,   36,   36,   36,   36,   36,   36
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[9] =
+static yyconst flex_int32_t yy_rule_can_match_eol[16] =
     {   0,
-0, 0, 1, 0, 0, 0, 0, 0,     };
+1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -477,12 +487,17 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "toml2json.l"
 #line 2 "toml2json.l"
+#include "headers/Array.h"
 int yyerror(char* s);
+Array keyvalue;
+int bandeira = 0;
 
-#line 483 "lex.yy.c"
+#line 496 "lex.yy.c"
 
 #define INITIAL 0
-#define entreAspas 1
+#define key 1
+#define value 2
+#define entreAspas 3
 
 #ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -662,9 +677,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 7 "toml2json.l"
+#line 12 "toml2json.l"
 
-#line 668 "lex.yy.c"
+
+#line 684 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -717,13 +733,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 21 )
+				if ( yy_current_state >= 37 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 20 );
+		while ( yy_base[yy_current_state] != 48 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -758,48 +774,125 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
+/* rule 1 can match eol */
 YY_RULE_SETUP
-#line 8 "toml2json.l"
-{}
+#line 15 "toml2json.l"
+{BEGIN 0;return yytext[0];}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 9 "toml2json.l"
-{}
+#line 16 "toml2json.l"
+{yylval.info.uniontype = 1; yylval.info.valor.n = atoi(yytext); return val;}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 11 "toml2json.l"
-return yytext[0]; // Símbolos terminais
+#line 17 "toml2json.l"
+{yytext[yyleng-1] = '\0'; yylval.info.uniontype = 0; yylval.info.valor.s = strdup(yytext+1); return val;}
 	YY_BREAK
+
 case 4:
 YY_RULE_SETUP
-#line 12 "toml2json.l"
-{yylval.n = atoi(yytext)    ; return text;}
+#line 20 "toml2json.l"
+{BEGIN value;return yytext[0];}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 13 "toml2json.l"
-{yylval.s = strdup(yytext)  ; return text;}
+#line 21 "toml2json.l"
+{yylval.info.uniontype = 1; yylval.info.valor.n = atoi(yytext); return val;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 14 "toml2json.l"
-{yytext[yyleng-1] = '\0'; yylval.s = strdup(yytext+1)  ; return text;}
+#line 22 "toml2json.l"
+{BEGIN entreAspas;initArray(&keyvalue,20);insertArray(&keyvalue,yytext[0]);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 16 "toml2json.l"
-{yyerror("Simbolo desconhecido");}
+#line 23 "toml2json.l"
+{
+                    // Tirar o espaço
+                    if(yytext[yyleng-1] == ' ')
+                        yytext[yyleng-1] = '\0'; 
+                    
+                    yylval.info.valor.s = strdup(yytext); 
+                    yylval.info.uniontype = 0; 
+                    return val;
+                }
 	YY_BREAK
+
 case 8:
 YY_RULE_SETUP
-#line 17 "toml2json.l"
+#line 33 "toml2json.l"
+{
+                    if(aspaOrPelica(&keyvalue) == 0){
+                        insertArray(&keyvalue,'\\');
+                    }
+                    insertArray(&keyvalue,'\"');
+                }
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+#line 39 "toml2json.l"
+{
+                    if(aspaOrPelica(&keyvalue) == 0){
+                        BEGIN 0;
+                        yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
+                        yylval.info.uniontype = 0;
+                        return val;
+                    }
+                    else if(aspaOrPelica(&keyvalue) == 1) {
+                        insertArray(&keyvalue,'\\');
+                        insertArray(&keyvalue,yytext[0]);
+                    }
+                }
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 51 "toml2json.l"
+{
+                    if(aspaOrPelica(&keyvalue) == 1){
+                        BEGIN 0;
+                        yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
+                        yylval.info.uniontype = 0;
+                        return val;
+                    }
+                    else if(aspaOrPelica(&keyvalue) == 0) {insertArray(&keyvalue,yytext[0]);}
+                }
+	YY_BREAK
+case 11:
+YY_RULE_SETUP
+#line 60 "toml2json.l"
+{
+                    insertArray(&keyvalue,yytext[0]);
+                }
+	YY_BREAK
+
+
+case 12:
+YY_RULE_SETUP
+#line 68 "toml2json.l"
+{}
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 69 "toml2json.l"
+{}
+	YY_BREAK
+case 14:
+YY_RULE_SETUP
+#line 70 "toml2json.l"
+{yyerror("Simbolo desconhecido");}
+	YY_BREAK
+
+case 15:
+YY_RULE_SETUP
+#line 73 "toml2json.l"
 ECHO;
 	YY_BREAK
-#line 802 "lex.yy.c"
+#line 893 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(key):
+case YY_STATE_EOF(value):
 case YY_STATE_EOF(entreAspas):
 	yyterminate();
 
@@ -1091,7 +1184,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 21 )
+			if ( yy_current_state >= 37 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1119,11 +1212,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 21 )
+		if ( yy_current_state >= 37 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 20);
+	yy_is_jam = (yy_current_state == 36);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1808,6 +1901,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 17 "toml2json.l"
+#line 73 "toml2json.l"
 
 

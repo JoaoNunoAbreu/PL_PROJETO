@@ -66,11 +66,15 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     text = 258
+     text = 258,
+     num = 259,
+     val = 260
    };
 #endif
 /* Tokens.  */
 #define text 258
+#define num 259
+#define val 260
 
 
 
@@ -81,10 +85,10 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 int yylex();
 int yyerror(char* s);
-
+int flag = 0;
 
 
 /* Enabling traces.  */
@@ -109,11 +113,24 @@ int yyerror(char* s);
 typedef union YYSTYPE
 #line 10 "toml2json.y"
 {
+
   char* s;
   int n;
+
+  union Data {
+    char* s;
+    int n;
+  } data;
+
+  struct Info{
+    int uniontype; // 0 - string, 1 - inteiro
+    union Data valor;
+  } info;
+  
+  
 }
 /* Line 193 of yacc.c.  */
-#line 117 "y.tab.c"
+#line 134 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -126,7 +143,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 130 "y.tab.c"
+#line 147 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -339,22 +356,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  2
+#define YYFINAL  3
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   5
+#define YYLAST   4
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  6
+#define YYNTOKENS  8
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  5
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  6
+#define YYNRULES  7
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  10
+#define YYNSTATES  11
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   258
+#define YYMAXUTOK   260
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -363,17 +380,12 @@ union yyalloc
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       4,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       6,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     5,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     7,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -387,7 +399,13 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5
 };
 
 #if YYDEBUG
@@ -395,20 +413,20 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     7,     8,    12,    14
+       0,     0,     3,     5,     9,    10,    14,    16
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-       7,     0,    -1,     7,     8,     4,    -1,    -1,     9,     5,
-      10,    -1,     3,    -1,     3,    -1
+       9,     0,    -1,    10,    -1,    10,    11,     6,    -1,    -1,
+      12,     7,    13,    -1,     5,    -1,     5,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    18,    18,    19,    22,    24,    26
+       0,    34,    34,    36,    37,    40,    51,    53
 };
 #endif
 
@@ -417,8 +435,8 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "text", "'\\n'", "'='", "$accept",
-  "Lang", "Pair", "Key", "Value", 0
+  "$end", "error", "$undefined", "text", "num", "val", "'\\n'", "'='",
+  "$accept", "TOML", "Lang", "Pair", "Key", "Value", 0
 };
 #endif
 
@@ -427,20 +445,20 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,    10,    61
+       0,   256,   257,   258,   259,   260,    10,    61
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,     6,     7,     7,     8,     9,    10
+       0,     8,     9,    10,    10,    11,    12,    13
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     3,     0,     3,     1,     1
+       0,     2,     1,     3,     0,     3,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -448,27 +466,29 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       3,     0,     1,     5,     0,     0,     2,     0,     6,     4
+       4,     0,     2,     1,     6,     0,     0,     3,     0,     7,
+       5
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     4,     5,     9
+      -1,     1,     2,     5,     6,    10
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -4
+#define YYPACT_NINF -6
 static const yytype_int8 yypact[] =
 {
-      -4,     0,    -4,    -4,    -3,    -1,    -4,     2,    -4,    -4
+      -6,     0,    -4,    -6,    -6,    -3,    -5,    -6,    -1,    -6,
+      -6
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -4,    -4,    -4,    -4,    -4
+      -6,    -6,    -6,    -6,    -6,    -6
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -478,19 +498,20 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       2,     6,     0,     3,     7,     8
+       3,     4,     8,     7,     9
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-       0,     4,    -1,     3,     5,     3
+       0,     5,     7,     6,     5
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     7,     0,     3,     8,     9,     4,     5,     3,    10
+       0,     9,    10,     0,     5,    11,    12,     6,     7,     5,
+      13
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1305,28 +1326,47 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 18 "toml2json.y"
-    {printf("{\n\t%s\n}",(yyvsp[(2) - (3)].s));}
+#line 34 "toml2json.y"
+    {printf("{\t%s\n}",(yyvsp[(1) - (1)].s));}
+    break;
+
+  case 3:
+#line 36 "toml2json.y"
+    {if(!flag) {asprintf(&(yyval.s),"%s\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s)); flag = 1;}else asprintf(&(yyval.s),"%s,\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s));}
     break;
 
   case 4:
-#line 22 "toml2json.y"
-    {asprintf(&(yyval.s),"\"%s\" : \"%s\"",(yyvsp[(1) - (3)].s),(yyvsp[(3) - (3)].s));}
+#line 37 "toml2json.y"
+    {(yyval.s) = "";}
     break;
 
   case 5:
-#line 24 "toml2json.y"
-    {(yyval.s) = (yyvsp[(1) - (1)].s);}
+#line 40 "toml2json.y"
+    {
+                                    if((yyvsp[(1) - (3)].info).uniontype == 0 && (yyvsp[(3) - (3)].info).uniontype == 0)
+                                      asprintf(&(yyval.s),"\"%s\" : \"%s\"",(yyvsp[(1) - (3)].info).valor.s,(yyvsp[(3) - (3)].info).valor.s);
+                                    if((yyvsp[(1) - (3)].info).uniontype == 0 && (yyvsp[(3) - (3)].info).uniontype == 1)
+                                      asprintf(&(yyval.s),"\"%s\" : %d",(yyvsp[(1) - (3)].info).valor.s,(yyvsp[(3) - (3)].info).valor.n);  
+                                    if((yyvsp[(1) - (3)].info).uniontype == 1 && (yyvsp[(3) - (3)].info).uniontype == 0)
+                                      asprintf(&(yyval.s),"\"%d\" : \"%s\"",(yyvsp[(1) - (3)].info).valor.n,(yyvsp[(3) - (3)].info).valor.s);  
+                                    if((yyvsp[(1) - (3)].info).uniontype == 1 && (yyvsp[(3) - (3)].info).uniontype == 1)
+                                      asprintf(&(yyval.s),"\"%d\" : %d",(yyvsp[(1) - (3)].info).valor.n,(yyvsp[(3) - (3)].info).valor.n);    
+                                }
     break;
 
   case 6:
-#line 26 "toml2json.y"
-    {(yyval.s) = (yyvsp[(1) - (1)].s);}
+#line 51 "toml2json.y"
+    {(yyval.info) = (yyvsp[(1) - (1)].info);}
+    break;
+
+  case 7:
+#line 53 "toml2json.y"
+    {(yyval.info) = (yyvsp[(1) - (1)].info);}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1330 "y.tab.c"
+#line 1370 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1540,7 +1580,7 @@ yyreturn:
 }
 
 
-#line 27 "toml2json.y"
+#line 54 "toml2json.y"
 
 
 #include "lex.yy.c"

@@ -1,3 +1,12 @@
-title = "TOML"
-title = "TOML1"
-title = "TOML2"
+key = "value"
+bare_key = "value"
+bare-key = "value"
+1234 = "value"
+'key2' = "value1"
+"127.0.0.1" = "value2"
+"character encoding" = "value3"
+"ʎǝʞ" = "value4"
+'quoted "value"' = "value5"
+'abc"A"' = 1
+"abd\"A\"" = 1
+"abe'A'" = 1
