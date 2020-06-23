@@ -14,6 +14,7 @@ ASPAS (["][^"]*["]|['][^']*['])
 <value>{
 [\n]            {BEGIN 0;return yytext[0];}
 [0-9]+          {yylval.info.uniontype = 1; yylval.info.valor.n = atoi(yytext); return val;}
+(true|false)    {yylval.info.uniontype = 2; yylval.info.valor.s = strdup(yytext); return val;}
 {ASPAS}         {yytext[yyleng-1] = '\0'; yylval.info.uniontype = 0; yylval.info.valor.s = strdup(yytext+1); return val;}
 }
 

@@ -18,7 +18,7 @@ int flag = 0;
   } data;
 
   struct Info{
-    int uniontype; // 0 - string, 1 - inteiro
+    int uniontype; // 0 - string, 1 - inteiro, 2 - boolean
     union Data valor;
   } info;
   
@@ -45,7 +45,11 @@ Pair  : Key '=' Value           {
                                     if($1.uniontype == 1 && $3.uniontype == 0)
                                       asprintf(&$$,"\"%d\" : \"%s\"",$1.valor.n,$3.valor.s);  
                                     if($1.uniontype == 1 && $3.uniontype == 1)
-                                      asprintf(&$$,"\"%d\" : %d",$1.valor.n,$3.valor.n);    
+                                      asprintf(&$$,"\"%d\" : %d",$1.valor.n,$3.valor.n);
+                                    if($1.uniontype == 0 && $3.uniontype == 2)
+                                      asprintf(&$$,"\"%s\" : %s",$1.valor.s,$3.valor.s);
+                                    if($1.uniontype == 1 && $3.uniontype == 2)
+                                      asprintf(&$$,"\"%d\" : %s",$1.valor.n,$3.valor.s);    
                                 }
 
 Key   : val                     {$$ = $1;}
