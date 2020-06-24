@@ -1,0 +1,11 @@
+name = "Orange"
+physical.color = "orange"
+physical.shape = "round"
+physical.odor = "smelly"
+mota.color = "Blue"
+mota.shape = 45
+mota.speed = 155
+mota.nitro = true
+stream = 12346
+system.name = 'nome'
+system.reset = false

@@ -40,6 +40,7 @@ Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
                                     if(incomplete > 0){
                                       asprintf(&$$,"%s\n\t},\n\t%s",$1,$2); 
                                       incomplete--;
+                                      flag = 1;
                                     }
                                     else {
                                       if(!flag) {
@@ -55,8 +56,12 @@ Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
       | Lang DottedPair '\n'    {   printf("incomplete = %d\n",incomplete);
                                     if(incomplete > 0 && dont_fix_it == 0){
                                       if(!dot_flag) {
-                                        asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
-                                        incomplete--;
+                                        if(flag)
+                                          asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                        else{
+                                          asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
+                                          incomplete--;
+                                        }
                                         dot_flag = 1;
                                       }
                                       else {
