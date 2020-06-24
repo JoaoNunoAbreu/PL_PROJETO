@@ -7,7 +7,7 @@ int yylex();
 int yyerror(char* s);
 int flag = 0;
 int dot_flag = 0;
-int dot_flag2 = 0;
+int dont_fix_it = 0;
 int incomplete = 0;
 char* currentKey = "";
 %}
@@ -53,7 +53,7 @@ Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
                                     dot_flag = 0;
                                 }
       | Lang DottedPair '\n'    {   printf("incomplete = %d\n",incomplete);
-                                    if(incomplete > 0){
+                                    if(incomplete > 0 && dont_fix_it == 0){
                                       if(!dot_flag) {
                                         asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
                                         incomplete--;
@@ -64,6 +64,7 @@ Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
                                       } 
                                     }
                                     else{
+                                      dont_fix_it = 0;
                                       if(!dot_flag) {
                                         if(flag)
                                           asprintf(&$$,"%s,\n\t%s",$1,$2);
@@ -99,7 +100,11 @@ DottedPair : Key'.'SubKey '=' Value {
                                     if(strcmp($1.valor.s,currentKey) != 0){
                                       printf("ENTREI com 1.valor.s = %s e currentKey = %s\n",$1.valor.s,currentKey);
                                       dot_flag = 0;        
-                                      if(strcmp(currentKey,"") != 0) incomplete++;
+                                      if(!strcmp(currentKey,"")) {
+                                        printf("dont_fix_it = 1;\n");
+                                        dont_fix_it = 1;
+                                      }
+                                      incomplete++;
                                       
                                       if($5.uniontype == 0)
                                         asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : \"%s\"",$1.valor.s,$3.valor.s,$5.valor.s);
