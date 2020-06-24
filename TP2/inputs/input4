@@ -1,0 +1,6 @@
+physical.color = "orange"
+physical.shape = "round"
+physical.mirror = "round"
+mota.color = "Blue"
+mota.shape = 45
+mota.speed = 155
