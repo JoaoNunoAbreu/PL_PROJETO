@@ -427,8 +427,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    39,    61,    89,    92,   106,   133,   134,
-     135
+       0,    37,    37,    39,    62,    91,    94,   108,   135,   136,
+     137
 };
 #endif
 
@@ -1331,13 +1331,13 @@ yyreduce:
     {
         case 2:
 #line 37 "toml2json.y"
-    {if(incomplete) printf("{\t%s\n\t}\n}",(yyvsp[(1) - (1)].s)); else printf("{\t%s\n}",(yyvsp[(1) - (1)].s));}
+    {if(incomplete > 0) printf("{\t%s\n\t}\n}",(yyvsp[(1) - (1)].s)); else printf("{\t%s\n}",(yyvsp[(1) - (1)].s));}
     break;
 
   case 3:
 #line 39 "toml2json.y"
     { 
-                                    if(incomplete){
+                                    if(incomplete > 0){
                                       if(!flag) {
                                         asprintf(&(yyval.s),"%s\n\t},\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s)); 
                                         flag = 1;
@@ -1346,6 +1346,7 @@ yyreduce:
                                         asprintf(&(yyval.s),"%s,\n\t},\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s)); 
                                       }
                                       dot_flag = 0;
+                                      incomplete--;
                                     }
                                     else {
                                       if(!flag) {
@@ -1361,15 +1362,16 @@ yyreduce:
     break;
 
   case 4:
-#line 61 "toml2json.y"
+#line 62 "toml2json.y"
     {
-                                    if(incomplete){
+                                    if(incomplete > 0){
                                       if(!dot_flag && flag) {
                                         asprintf(&(yyval.s),"%s,\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s));
                                         dot_flag = 1;
                                       }
                                       else if(!dot_flag && !flag) {
                                         asprintf(&(yyval.s),"%s\n\t},\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s));
+                                        incomplete--;
                                       }
                                       else {
                                         asprintf(&(yyval.s),"%s,\n\t%s",(yyvsp[(1) - (3)].s),(yyvsp[(2) - (3)].s));
@@ -1393,12 +1395,12 @@ yyreduce:
     break;
 
   case 5:
-#line 89 "toml2json.y"
+#line 91 "toml2json.y"
     {(yyval.s) = "";}
     break;
 
   case 6:
-#line 92 "toml2json.y"
+#line 94 "toml2json.y"
     {
                                     if((yyvsp[(1) - (3)].info).uniontype == 0 && (yyvsp[(3) - (3)].info).uniontype == 0)
                                       asprintf(&(yyval.s),"\"%s\" : \"%s\"",(yyvsp[(1) - (3)].info).valor.s,(yyvsp[(3) - (3)].info).valor.s);
@@ -1416,13 +1418,13 @@ yyreduce:
     break;
 
   case 7:
-#line 106 "toml2json.y"
+#line 108 "toml2json.y"
     {
                                     /* Entra na primeira iteração e quando chave muda */
                                     if(!dot_flag2 || strcmp((yyvsp[(1) - (5)].info).valor.s,currentKey) != 0){
                                       dot_flag2 = 1;
                                       dot_flag = 0;        
-                                      incomplete = 1;
+                                      incomplete++;
                                       
                                       if((yyvsp[(5) - (5)].info).uniontype == 0)
                                         asprintf(&(yyval.s),"\"%s\" : {\n\t\t\"%s\" : \"%s\"",(yyvsp[(1) - (5)].info).valor.s,(yyvsp[(3) - (5)].info).valor.s,(yyvsp[(5) - (5)].info).valor.s);
@@ -1446,23 +1448,23 @@ yyreduce:
     break;
 
   case 8:
-#line 133 "toml2json.y"
+#line 135 "toml2json.y"
     {(yyval.info) = (yyvsp[(1) - (1)].info);}
     break;
 
   case 9:
-#line 134 "toml2json.y"
+#line 136 "toml2json.y"
     {(yyval.info) = (yyvsp[(1) - (1)].info);}
     break;
 
   case 10:
-#line 135 "toml2json.y"
+#line 137 "toml2json.y"
     {(yyval.info) = (yyvsp[(1) - (1)].info);}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1466 "y.tab.c"
+#line 1468 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1676,7 +1678,7 @@ yyreturn:
 }
 
 
-#line 136 "toml2json.y"
+#line 138 "toml2json.y"
 
 
 #include "lex.yy.c"

@@ -1,4 +1,4 @@
 name = "Orange"
+site = true
 physical.color = "orange"
 physical.shape = "round"
-site."google.com" = true

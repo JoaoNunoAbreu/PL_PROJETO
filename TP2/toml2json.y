@@ -34,10 +34,10 @@ char* currentKey = "";
 %type <info> SubKey Value Key val 
 %%
 
-TOML  : Lang                    {if(incomplete) printf("{\t%s\n\t}\n}",$1); else printf("{\t%s\n}",$1);}
+TOML  : Lang                    {if(incomplete > 0) printf("{\t%s\n\t}\n}",$1); else printf("{\t%s\n}",$1);}
 
 Lang  : Lang Pair '\n'          { 
-                                    if(incomplete){
+                                    if(incomplete > 0){
                                       if(!flag) {
                                         asprintf(&$$,"%s\n\t},\n\t%s",$1,$2); 
                                         flag = 1;
@@ -46,6 +46,7 @@ Lang  : Lang Pair '\n'          {
                                         asprintf(&$$,"%s,\n\t},\n\t%s",$1,$2); 
                                       }
                                       dot_flag = 0;
+                                      incomplete--;
                                     }
                                     else {
                                       if(!flag) {
@@ -59,13 +60,14 @@ Lang  : Lang Pair '\n'          {
                                     }
                                 }
       | Lang DottedPair '\n'    {
-                                    if(incomplete){
+                                    if(incomplete > 0){
                                       if(!dot_flag && flag) {
                                         asprintf(&$$,"%s,\n\t%s",$1,$2);
                                         dot_flag = 1;
                                       }
                                       else if(!dot_flag && !flag) {
                                         asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
+                                        incomplete--;
                                       }
                                       else {
                                         asprintf(&$$,"%s,\n\t%s",$1,$2);
@@ -108,7 +110,7 @@ DottedPair : Key'.'SubKey '=' Value {
                                     if(!dot_flag2 || strcmp($1.valor.s,currentKey) != 0){
                                       dot_flag2 = 1;
                                       dot_flag = 0;        
-                                      incomplete = 1;
+                                      incomplete++;
                                       
                                       if($5.uniontype == 0)
                                         asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : \"%s\"",$1.valor.s,$3.valor.s,$5.valor.s);
