@@ -13,3 +13,4 @@
 * https://en.wikipedia.org/wiki/TOML
 * https://pseitz.github.io/toml-to-json-online-converter/
 * https://jsonlint.com/
+* https://toml.io/en/v1.0.0-rc.1

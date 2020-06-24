@@ -68,6 +68,7 @@ ASPAS (["][^"]*["]|['][^']*['])
 <*>{
 #.*             {}
 [ ]             {}
+[\.]            {return yytext[0];} // Símbolos terminais
 .               {yyerror("Simbolo desconhecido");}
 }
 

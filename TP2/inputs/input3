@@ -1,12 +1,4 @@
-key = "value"
-bare_key = "value"
-bare-key = "value"
-1234 = "value"
-'key2' = true
-"127.0.0.1" = "value2"
-"character encoding" = "value3"
-"ʎǝʞ" = "value4"
-'quoted "value"' = "value5"
-'abc"A"' = 1
-"abd\"A\"" = 1
-"abe'A'" = 1
+name = "Orange"
+physical.color = "orange"
+physical.shape = "round"
+value = "vddddd"

@@ -6,6 +6,10 @@
 int yylex();
 int yyerror(char* s);
 int flag = 0;
+int dot_flag = 0;
+int dot_flag2 = 0;
+int uncomplete = 0;
+char* currentKey = "";
 %}
 %union{
 
@@ -25,15 +29,63 @@ int flag = 0;
   
 }
 
-%token text num val
-%type <s> text Pair Lang
-%type <n> num
-%type <info> Value Key val
+%token val
+%type <s> Pair Lang DottedPair 
+%type <info> SubKey Value Key val 
 %%
 
 TOML  : Lang                    {printf("{\t%s\n}",$1);}
 
-Lang  : Lang Pair '\n'          {if(!flag) {asprintf(&$$,"%s\n\t%s",$1,$2); flag = 1;}else asprintf(&$$,"%s,\n\t%s",$1,$2);}
+Lang  : Lang Pair '\n'          { 
+                                    if(uncomplete){
+                                      if(!flag) {
+                                        asprintf(&$$,"%s\n\t},\n\t%s",$1,$2); 
+                                        flag = 1;
+                                      }
+                                      else{
+                                        asprintf(&$$,"%s,\n\t},\n\t%s",$1,$2); 
+                                      }
+                                      dot_flag = 0;
+                                    }
+                                    else {
+                                      if(!flag) {
+                                        asprintf(&$$,"%s\n\t%s",$1,$2); 
+                                        flag = 1;
+                                      }
+                                      else{
+                                        asprintf(&$$,"%s,\n\t%s",$1,$2); 
+                                      }
+                                      dot_flag = 0;
+                                    }
+                                }
+      | Lang DottedPair '\n'    {
+                                    if(uncomplete){
+                                      if(!dot_flag && flag) {
+                                        asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                        dot_flag = 1;
+                                      }
+                                      else if(!dot_flag && !flag) {
+                                        asprintf(&$$,"%s\n\t%s",$1,$2);
+                                      }
+                                      else {
+                                        asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                      } 
+                                      flag = 0;
+                                    }
+                                    else{
+                                      if(!dot_flag && flag) {
+                                        asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                        dot_flag = 1;
+                                      }
+                                      else if(!dot_flag && !flag) {
+                                        asprintf(&$$,"%s\n\t%s",$1,$2);
+                                      }
+                                      else {
+                                        asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                      } 
+                                      flag = 0;
+                                    }
+                                }
       |                         {$$ = "";}
       ;
 
@@ -51,9 +103,22 @@ Pair  : Key '=' Value           {
                                     if($1.uniontype == 1 && $3.uniontype == 2)
                                       asprintf(&$$,"\"%d\" : %s",$1.valor.n,$3.valor.s);    
                                 }
+DottedPair : Key'.'SubKey '=' Value {
+                                    printf("$1.valor.s = %s\n",$1.valor.s);
+                                    if(!dot_flag2 && strcmp($1.valor.s,currentKey) != 0){
+                                      dot_flag2 = 1;
+                                      asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : \"%s\"",$1.valor.s,$3.valor.s,$5.valor.s);
+                                      uncomplete = 1;
+                                      currentKey = strdup($1.valor.s);
+                                      printf("currentKey = %s\n",currentKey);
+                                    }
+                                    else{
+                                      asprintf(&$$,"\t\"%s\" : \"%s\"",$3.valor.s,$5.valor.s);
+                                    }
+                                  }
 
 Key   : val                     {$$ = $1;}
-
+SubKey : val                    {$$ = $1;}
 Value : val                     {$$ = $1;}
 %%
 
