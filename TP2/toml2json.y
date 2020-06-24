@@ -8,7 +8,7 @@ int yyerror(char* s);
 int flag = 0;
 int dot_flag = 0;
 int dot_flag2 = 0;
-int uncomplete = 0;
+int incomplete = 0;
 char* currentKey = "";
 %}
 %union{
@@ -34,10 +34,10 @@ char* currentKey = "";
 %type <info> SubKey Value Key val 
 %%
 
-TOML  : Lang                    {printf("{\t%s\n}",$1);}
+TOML  : Lang                    {if(incomplete) printf("{\t%s\n\t}\n}",$1); else printf("{\t%s\n}",$1);}
 
 Lang  : Lang Pair '\n'          { 
-                                    if(uncomplete){
+                                    if(incomplete){
                                       if(!flag) {
                                         asprintf(&$$,"%s\n\t},\n\t%s",$1,$2); 
                                         flag = 1;
@@ -59,13 +59,13 @@ Lang  : Lang Pair '\n'          {
                                     }
                                 }
       | Lang DottedPair '\n'    {
-                                    if(uncomplete){
+                                    if(incomplete){
                                       if(!dot_flag && flag) {
                                         asprintf(&$$,"%s,\n\t%s",$1,$2);
                                         dot_flag = 1;
                                       }
                                       else if(!dot_flag && !flag) {
-                                        asprintf(&$$,"%s\n\t%s",$1,$2);
+                                        asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
                                       }
                                       else {
                                         asprintf(&$$,"%s,\n\t%s",$1,$2);
@@ -104,17 +104,30 @@ Pair  : Key '=' Value           {
                                       asprintf(&$$,"\"%d\" : %s",$1.valor.n,$3.valor.s);    
                                 }
 DottedPair : Key'.'SubKey '=' Value {
-                                    printf("$1.valor.s = %s\n",$1.valor.s);
-                                    if(!dot_flag2 && strcmp($1.valor.s,currentKey) != 0){
+                                    /* Entra na primeira iteração e quando chave muda */
+                                    if(!dot_flag2 || strcmp($1.valor.s,currentKey) != 0){
                                       dot_flag2 = 1;
-                                      asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : \"%s\"",$1.valor.s,$3.valor.s,$5.valor.s);
-                                      uncomplete = 1;
+                                      dot_flag = 0;        
+                                      incomplete = 1;
+                                      
+                                      if($5.uniontype == 0)
+                                        asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : \"%s\"",$1.valor.s,$3.valor.s,$5.valor.s);
+                                      if($5.uniontype == 1)
+                                        asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %d",$1.valor.s,$3.valor.s,$5.valor.n);
+                                      if($5.uniontype == 2)
+                                        asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %s",$1.valor.s,$3.valor.s,$5.valor.s);
                                       currentKey = strdup($1.valor.s);
-                                      printf("currentKey = %s\n",currentKey);
                                     }
                                     else{
-                                      asprintf(&$$,"\t\"%s\" : \"%s\"",$3.valor.s,$5.valor.s);
+                                      if($5.uniontype == 0)
+                                        asprintf(&$$,"\t\"%s\" : \"%s\"",$3.valor.s,$5.valor.s);
+                                      if($5.uniontype == 1)
+                                        asprintf(&$$,"\t\"%s\" : %d",$3.valor.s,$5.valor.n);
+                                      if($5.uniontype == 2)
+                                        asprintf(&$$,"\t\"%s\" : %s",$3.valor.s,$5.valor.s);
                                     }
+
+                                    
                                   }
 
 Key   : val                     {$$ = $1;}
