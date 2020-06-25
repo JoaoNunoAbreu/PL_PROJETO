@@ -1,17 +1,7 @@
-str1 = "The quick brown fox jumps over the lazy dog."
-str2 = """
-The quick brown \
+quot15 = '''Here are fifteen quotation marks: """""""""""""""'''
 
+# apos15 = '''Here are fifteen apostrophes: ''''''''''''''''''  # INVALID
+apos15 = "Here are fifteen apostrophes: '''''''''''''''"
 
-  fox jumps over \
-    the lazy dog."""
-
-
-
-
-    
-str3 = """\
-       The quick brown \
-       fox jumps over \
-       the lazy dog.\
-       """
+# 'That's still pointless', she said.
+str = ''''That's still pointless', she said.'''

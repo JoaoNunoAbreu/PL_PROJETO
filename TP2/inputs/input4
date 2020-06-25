@@ -1,6 +1,12 @@
+name = "Orange"
 physical.color = "orange"
 physical.shape = "round"
-physical.mirror = "round"
+physical.odor = "smelly"
 mota.color = "Blue"
 mota.shape = 45
-mota.speed = 155
+mota.speed = "155"
+mota.nitro = 'true'
+stream = 12346
+streamar = "ghgh"
+system.name = 'nome'
+system.reset = false
