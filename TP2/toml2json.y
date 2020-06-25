@@ -36,7 +36,7 @@ char* currentKey = "";
 
 TOML  : Lang                    {if(incomplete > 0) printf("{\t%s\n\t}\n}",$1); else printf("{\t%s\n}",$1);}
 
-Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
+Lang  : Lang Pair '\n'          {   
                                     if(incomplete > 0){
                                       asprintf(&$$,"%s\n\t},\n\t%s",$1,$2); 
                                       incomplete--;
@@ -53,7 +53,7 @@ Lang  : Lang Pair '\n'          {   printf("incomplete = %d\n",incomplete);
                                     }
                                     dot_flag = 0;
                                 }
-      | Lang DottedPair '\n'    {   printf("incomplete = %d\n",incomplete);
+      | Lang DottedPair '\n'    {   
                                     if(incomplete > 0 && dont_fix_it == 0){
                                       if(!dot_flag) {
                                         if(flag)
@@ -103,10 +103,8 @@ Pair  : Key '=' Value           {
 DottedPair : Key'.'SubKey '=' Value {
                                     /* Entra na primeira iteração e quando chave muda */
                                     if(strcmp($1.valor.s,currentKey) != 0){
-                                      printf("ENTREI com 1.valor.s = %s e currentKey = %s\n",$1.valor.s,currentKey);
                                       dot_flag = 0;        
                                       if(!strcmp(currentKey,"")) {
-                                        printf("dont_fix_it = 1;\n");
                                         dont_fix_it = 1;
                                       }
                                       incomplete++;
@@ -118,7 +116,6 @@ DottedPair : Key'.'SubKey '=' Value {
                                       if($5.uniontype == 2)
                                         asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %s",$1.valor.s,$3.valor.s,$5.valor.s);
                                       currentKey = strdup($1.valor.s);
-                                      printf("currentKey = %s\n",currentKey);
                                     }
                                     else{
                                       if($5.uniontype == 0)

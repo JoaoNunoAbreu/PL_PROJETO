@@ -9,3 +9,4 @@ mota.nitro = true
 stream = 12346
 system.name = 'nome'
 system.reset = false
+ola = "sadfasd"
