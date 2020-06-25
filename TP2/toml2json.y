@@ -14,15 +14,17 @@ char* currentKey = "";
 %union{
 
   char* s;
+  float f;
   int n;
 
   union Data {
     char* s;
+    float f;
     int n;
   } data;
 
   struct Info{
-    int uniontype; // 0 - string, 1 - inteiro, 2 - boolean
+    int uniontype; // 0 - string, 1 - inteiro, 2 - boolean, 3 - float
     union Data valor;
   } info;
   
@@ -98,7 +100,11 @@ Pair  : Key '=' Value           {
                                     if($1.uniontype == 0 && $3.uniontype == 2)
                                       asprintf(&$$,"\"%s\" : %s",$1.valor.s,$3.valor.s);
                                     if($1.uniontype == 1 && $3.uniontype == 2)
-                                      asprintf(&$$,"\"%d\" : %s",$1.valor.n,$3.valor.s);    
+                                      asprintf(&$$,"\"%d\" : %s",$1.valor.n,$3.valor.s);   
+                                    if($1.uniontype == 0 && $3.uniontype == 3)
+                                      asprintf(&$$,"\"%s\" : %f",$1.valor.s,$3.valor.f);
+                                    if($1.uniontype == 1 && $3.uniontype == 3)
+                                      asprintf(&$$,"\"%d\" : %f",$1.valor.n,$3.valor.f);    
                                 }
 DottedPair : Key'.'SubKey '=' Value {
                                     /* Entra na primeira iteração e quando chave muda */
@@ -115,6 +121,8 @@ DottedPair : Key'.'SubKey '=' Value {
                                         asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %d",$1.valor.s,$3.valor.s,$5.valor.n);
                                       if($5.uniontype == 2)
                                         asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %s",$1.valor.s,$3.valor.s,$5.valor.s);
+                                      if($5.uniontype == 3)
+                                        asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %f",$1.valor.s,$3.valor.s,$5.valor.f);
                                       currentKey = strdup($1.valor.s);
                                     }
                                     else{
@@ -124,6 +132,8 @@ DottedPair : Key'.'SubKey '=' Value {
                                         asprintf(&$$,"\t\"%s\" : %d",$3.valor.s,$5.valor.n);
                                       if($5.uniontype == 2)
                                         asprintf(&$$,"\t\"%s\" : %s",$3.valor.s,$5.valor.s);
+                                      if($5.uniontype == 3)
+                                        asprintf(&$$,"\t\"%s\" : %f",$3.valor.s,$5.valor.f);
                                     }
 
                                     

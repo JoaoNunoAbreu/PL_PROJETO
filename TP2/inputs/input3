@@ -1,7 +1,4 @@
-quot15 = '''Here are fifteen quotation marks: """""""""""""""'''
-
-# apos15 = '''Here are fifteen apostrophes: ''''''''''''''''''  # INVALID
-apos15 = "Here are fifteen apostrophes: '''''''''''''''"
-
-# 'That's still pointless', she said.
-str = ''''That's still pointless', she said.'''
+int1 = +99
+int2 = 42
+int3 = 0
+int4 = -17
