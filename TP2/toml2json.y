@@ -35,8 +35,8 @@ char* currentTable = "";
 }
 
 %token val str
-%type <string> str Table Pair Lang DottedPair 
-%type <info> SubKey Value Key val 
+%type <string> str Table Pair Lang DottedPair Key SubKey
+%type <info> Value val 
 %%
 
 TOML  : Lang                    {
@@ -121,9 +121,6 @@ Lang  : Lang Pair '\n'          {
                                     flag = 0;
                                     dot_flag = 0;
                                 }
-      | Lang Table'.'SubTable   {
-
-                                }
       |                         {$$ = "";}
       ;
 
@@ -131,19 +128,15 @@ Pair  : Key '=' Value           {
                                     char* temp;
                                     if(incomplete_for_tables) temp = strdup("\t");
                                     else temp = strdup("");
-                                    if($1.uniontype == 0 && $3.uniontype == 0) asprintf(&$$,"%s\"%s\" : \"%s\"",temp,$1.valor.s,$3.valor.s);
-                                    if($1.uniontype == 0 && $3.uniontype == 1) asprintf(&$$,"%s\"%s\" : %d",temp,$1.valor.s,$3.valor.n);  
-                                    if($1.uniontype == 1 && $3.uniontype == 0) asprintf(&$$,"%s\"%d\" : \"%s\"",temp,$1.valor.n,$3.valor.s);  
-                                    if($1.uniontype == 1 && $3.uniontype == 1) asprintf(&$$,"%s\"%d\" : %d",temp,$1.valor.n,$3.valor.n);
-                                    if($1.uniontype == 0 && $3.uniontype == 2) asprintf(&$$,"%s\"%s\" : %s",temp,$1.valor.s,$3.valor.s);
-                                    if($1.uniontype == 1 && $3.uniontype == 2) asprintf(&$$,"%s\"%d\" : %s",temp,$1.valor.n,$3.valor.s);   
-                                    if($1.uniontype == 0 && $3.uniontype == 3) asprintf(&$$,"%s\"%s\" : %f",temp,$1.valor.s,$3.valor.f);
-                                    if($1.uniontype == 1 && $3.uniontype == 3) asprintf(&$$,"%s\"%d\" : %f",temp,$1.valor.n,$3.valor.f);    
+                                    if($3.uniontype == 0) asprintf(&$$,"%s\"%s\" : \"%s\"",temp,$1,$3.valor.s);
+                                    if($3.uniontype == 1) asprintf(&$$,"%s\"%s\" : %d",temp,$1,$3.valor.n);
+                                    if($3.uniontype == 2) asprintf(&$$,"%s\"%s\" : %s",temp,$1,$3.valor.s);
+                                    if($3.uniontype == 3) asprintf(&$$,"%s\"%s\" : %f",temp,$1,$3.valor.f);    
                                     free(temp);
                                 }
 DottedPair : Key'.'SubKey '=' Value {
                                         /* Entra quando chave muda */
-                                        if(strcmp($1.valor.s,currentKey) != 0){
+                                        if(strcmp($1,currentKey) != 0){
                                             dot_flag = 0;        
                                             if(!strcmp(currentKey,"")) {
                                                 dont_fix_it = 1;
@@ -153,29 +146,23 @@ DottedPair : Key'.'SubKey '=' Value {
                                             char* temp;
                                             if(incomplete_for_tables) temp = strdup("\t");
                                             else temp = strdup("");
-                                            
-                                            /*char temp2[100];
-                                            if($1.uniontype == 1) {printf("ENTREI\n"); sprintf(temp2,"%d",$1.valor.n);}
-                                            else strcpy(temp2,$1.valor.s);*/
 
-                                            if($5.uniontype == 0) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : \"%s\"",temp,$1.valor.s,temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 1) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %d",temp,$1.valor.s,temp,$3.valor.s,$5.valor.n);
-                                            if($5.uniontype == 2) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %s",temp,$1.valor.s,temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 3) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %f",temp,$1.valor.s,temp,$3.valor.s,$5.valor.f);
+                                            if($5.uniontype == 0) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : \"%s\"",temp,$1,temp,$3,$5.valor.s);
+                                            if($5.uniontype == 1) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %d",temp,$1,temp,$3,$5.valor.n);
+                                            if($5.uniontype == 2) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %s",temp,$1,temp,$3,$5.valor.s);
+                                            if($5.uniontype == 3) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %f",temp,$1,temp,$3,$5.valor.f);
 
-                                            free(temp);
-
-                                            currentKey = strdup($1.valor.s);
+                                            currentKey = strdup($1);
                                         }
                                         else{
                                             char* temp;
                                             if(incomplete_for_tables) temp = strdup("\t");
                                             else temp = strdup("");
 
-                                            if($5.uniontype == 0) asprintf(&$$,"%s\t\"%s\" : \"%s\"",temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 1) asprintf(&$$,"%s\t\"%s\" : %d",temp,$3.valor.s,$5.valor.n);
-                                            if($5.uniontype == 2) asprintf(&$$,"%s\t\"%s\" : %s",temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 3) asprintf(&$$,"%s\t\"%s\" : %f",temp,$3.valor.s,$5.valor.f);
+                                            if($5.uniontype == 0) asprintf(&$$,"%s\t\"%s\" : \"%s\"",temp,$3,$5.valor.s);
+                                            if($5.uniontype == 1) asprintf(&$$,"%s\t\"%s\" : %d",temp,$3,$5.valor.n);
+                                            if($5.uniontype == 2) asprintf(&$$,"%s\t\"%s\" : %s",temp,$3,$5.valor.s);
+                                            if($5.uniontype == 3) asprintf(&$$,"%s\t\"%s\" : %f",temp,$3,$5.valor.f);
 
                                             free(temp);
                                         }
@@ -188,11 +175,8 @@ Table : str                         {
                                         asprintf(&$$,"\"%s\" : {",$1);
                                         currentTable = strdup($1);
                                     }
-SubTable : str                      {
-                                    
-                                    }
-Key   : val                         {$$ = $1;}
-SubKey : val                        {$$ = $1;}
+Key   : str                         {$$ = $1;}
+SubKey : str                        {$$ = $1;}
 Value : val                         {$$ = $1;}
 %%
 
