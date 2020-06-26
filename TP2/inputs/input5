@@ -1,1 +1,19 @@
-3.14 = "pi"
+[servers]
+
+  # Indentation (tabs and/or spaces) is allowed but not required
+  [servers.alpha]
+  ip = "10.0.0.1"
+  dc = "eqdc10"
+
+  [servers.beta]
+  ip = "10.0.0.2"
+  dc = "eqdc10"
+  
+[clients]
+[clients.info]
+data.ahaha = "já te fodeste"
+data.ehehe = "já te fodeste"
+
+[clients.fds]
+ufa.ahdddda = "já te fodeste"
+ufa.ellddlld = "já te fodeste"

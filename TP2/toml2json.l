@@ -24,7 +24,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
                                 yylval.string = strdup(yytext); 
                                 return str;
                             }
-\[[A-Za-z0-9_-]+\]          {   /* ------------------- Tables ------------------- */
+\[[.A-Za-z0-9_-]+\]         {   /* ------------------- Tables ------------------- */
                                 yytext[yyleng-1] = '\0'; 
                                 yylval.string = strdup(yytext+1); 
                                 return str;
@@ -37,7 +37,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$     {yylval.info.uniontype = 3; yylval.info.valor.f = atof(yytext); return val;}
 [-+]?[0-9]+                                 {yylval.info.uniontype = 1; yylval.info.valor.n = atoi(yytext); return val;}
 {OffsetDateTime}|{LocalTime}                {yylval.info.uniontype = 0; yylval.info.valor.s = strdup(yytext); return val;}
-([\"\']|\"\"\"|\"\"\"\n|\'\'\'|\'\'\'\n)    {printf("yytext = %s\n",yytext);BEGIN entreAspas;initArray(&keyvalue,20);insertArray(&keyvalue,yytext[0]); if(strcmp(yytext,"\"") != 0 && strcmp(yytext,"'") != 0) {inside_3_quotes = 1;}; }
+([\"\']|\"\"\"|\"\"\"\n|\'\'\'|\'\'\'\n)    {BEGIN entreAspas;initArray(&keyvalue,20);insertArray(&keyvalue,yytext[0]); if(strcmp(yytext,"\"") != 0 && strcmp(yytext,"'") != 0) {inside_3_quotes = 1;}; }
 }
 
 <entreAspas>{
@@ -56,7 +56,6 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
                             }
 [\"]                        {   
                                 if(aspaOrPelica(&keyvalue) == 0 && !inside_3_quotes){
-                                    printf("yytext = %s\n",yytext);
                                     BEGIN value;
                                     yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
                                     yylval.info.uniontype = 0;
@@ -91,7 +90,6 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
                                 insertArray(&keyvalue,'\\');
                             }
 .                           {   
-                                printf("yytext = %s\n",yytext);
                                 insertArray(&keyvalue,yytext[0]);
                             }
 }
@@ -101,7 +99,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 <*>{
 #.*             {}
 [ ]             {}
-\.              {printf("yytext = %s\n",yytext);return yytext[0];} // Símbolos terminais
+\.              {return yytext[0];} // Símbolos terminais
 .               {yyerror("Simbolo desconhecido");}
 }
 

@@ -10,8 +10,11 @@ int dot_flag = 0;
 int dont_fix_it = 0;
 int incomplete = 0;
 int incomplete_for_tables = 0;
+int incomplete_for_tables2 = 0;
 char* currentKey = "";
 char* currentTable = "";
+char* currentSubTable = "";
+char* mainTable = "";
 %}
 %union{
 
@@ -39,21 +42,25 @@ char* currentTable = "";
 %type <info> Value val 
 %%
 
-TOML  : Lang                    {
-                                    if(incomplete > 0 && incomplete_for_tables)
+TOML  : Lang                    {   printf("%d, %d, %d\n",incomplete,incomplete_for_tables,incomplete_for_tables2);
+                                    if(incomplete && incomplete_for_tables && incomplete_for_tables2)
+                                        printf("{\t%s\n\t\t\t}\n\t\t}\n\t}\n}",$1);
+                                    else if(incomplete && incomplete_for_tables)
                                         printf("{\t%s\n\t\t}\n\t}\n}",$1);
-                                    else if(incomplete > 0 || incomplete_for_tables)
+                                    else if(incomplete_for_tables && incomplete_for_tables2)
+                                        printf("{\t%s\n\t\t}\n\t}\n}",$1);    
+                                    else if(incomplete || incomplete_for_tables || incomplete_for_tables2)
                                         printf("{\t%s\n\t}\n}",$1);
                                     else 
                                         printf("{\t%s\n}",$1);}
 
 Lang  : Lang Pair '\n'          {   
-                                    if(incomplete > 0){
+                                    if(incomplete){
                                         char* temp;
                                         if(incomplete_for_tables) temp = strdup("\t},");
                                         else temp = strdup("},");
                                         asprintf(&$$,"%s\n\t%s\n\t%s",$1,temp,$2); 
-                                        incomplete--;
+                                        incomplete = 0;
                                         flag = 1;
                                         free(temp);
                                     }
@@ -69,16 +76,16 @@ Lang  : Lang Pair '\n'          {
                                     dot_flag = 0;
                                 }
       | Lang DottedPair '\n'    {   
-                                    if(incomplete > 0 && dont_fix_it == 0){
+                                    if(incomplete && dont_fix_it == 0){
                                         if(!dot_flag) {
                                             if(flag)
                                                 asprintf(&$$,"%s,\n\t%s",$1,$2);
                                             else{
                                                 char* temp;
-                                                if(incomplete_for_tables) temp = strdup("\t");
+                                                if(incomplete_for_tables && incomplete_for_tables2) temp = strdup("\t\t");
+                                                else if(incomplete_for_tables) temp = strdup("\t");
                                                 else temp = strdup("");
                                                 asprintf(&$$,"%s\n%s\t},\n\t%s",$1,temp,$2);
-                                                incomplete--;
                                                 free(temp);
                                             }
                                             dot_flag = 1;
@@ -101,14 +108,21 @@ Lang  : Lang Pair '\n'          {
                                     }
                                     flag = 0;
                                 }
-      | Lang Table              {   
-                                    if(incomplete > 0 || (incomplete_for_tables && !dont_fix_it)){
+      | Lang Table              {   printf("%d, %d, %d, %d\n",incomplete,incomplete_for_tables,incomplete_for_tables2,dont_fix_it);
+                                    if(incomplete || (incomplete_for_tables && !dont_fix_it) || (incomplete_for_tables2 && !dont_fix_it)){
                                         char* temp;
-                                        if((incomplete_for_tables && !dont_fix_it) && incomplete) temp = strdup("\t}\n\t},");
+                                        if(incomplete && incomplete_for_tables && incomplete_for_tables2)
+                                            temp = strdup("\t\t}\n\t\t},");
+                                        else if((incomplete_for_tables && incomplete) || (incomplete_for_tables && !incomplete_for_tables2) || (!incomplete_for_tables && incomplete_for_tables2)) {
+                                            temp = strdup("\t}\n\t},");
+                                            if(incomplete_for_tables == 0) incomplete_for_tables = 1;
+                                        }
+                                        else if((incomplete_for_tables2 && incomplete) || (incomplete_for_tables2 && incomplete_for_tables))
+                                            temp = strdup("\t},");
                                         else temp = strdup("},");
                                         asprintf(&$$,"%s\n\t%s\n\t%s",$1,temp,$2); 
                                         free(temp);
-                                        incomplete--;
+                                        incomplete = 0;
                                     }
                                     else {
                                         dont_fix_it = 0;
@@ -126,7 +140,8 @@ Lang  : Lang Pair '\n'          {
 
 Pair  : Key '=' Value           { 
                                     char* temp;
-                                    if(incomplete_for_tables) temp = strdup("\t");
+                                    if(incomplete_for_tables && incomplete_for_tables2) temp = strdup("\t\t");
+                                    else if(incomplete_for_tables || incomplete_for_tables2) temp = strdup("\t");
                                     else temp = strdup("");
                                     if($3.uniontype == 0) asprintf(&$$,"%s\"%s\" : \"%s\"",temp,$1,$3.valor.s);
                                     if($3.uniontype == 1) asprintf(&$$,"%s\"%s\" : %d",temp,$1,$3.valor.n);
@@ -141,10 +156,11 @@ DottedPair : Key'.'SubKey '=' Value {
                                             if(!strcmp(currentKey,"")) {
                                                 dont_fix_it = 1;
                                             }
-                                            incomplete++;
+                                            incomplete = 1;
                                             
                                             char* temp;
-                                            if(incomplete_for_tables) temp = strdup("\t");
+                                            if(incomplete_for_tables2 && incomplete_for_tables) temp = strdup("\t\t");
+                                            else if(incomplete_for_tables) temp = strdup("\t");
                                             else temp = strdup("");
 
                                             if($5.uniontype == 0) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : \"%s\"",temp,$1,temp,$3,$5.valor.s);
@@ -156,7 +172,8 @@ DottedPair : Key'.'SubKey '=' Value {
                                         }
                                         else{
                                             char* temp;
-                                            if(incomplete_for_tables) temp = strdup("\t");
+                                            if(incomplete_for_tables2 && incomplete_for_tables) temp = strdup("\t\t");
+                                            else if(incomplete_for_tables) temp = strdup("\t");
                                             else temp = strdup("");
 
                                             if($5.uniontype == 0) asprintf(&$$,"%s\t\"%s\" : \"%s\"",temp,$3,$5.valor.s);
@@ -167,14 +184,52 @@ DottedPair : Key'.'SubKey '=' Value {
                                             free(temp);
                                         }
                                     }
-Table : str                         {
-                                        if(!strcmp(currentTable,"")) {
-                                            dont_fix_it = 1;
+Table : str                         {   
+                                        
+                                        int i;
+                                        for(i = 0; i < strlen($1) && $1[i] != '.'; i++);
+                                        if($1[i] == '.'){
+                                            if(!strcmp(currentSubTable,"")) {
+                                                dont_fix_it = 1;
+                                            }
+                                            char* oldSubTable = strdup(currentSubTable);
+
+                                            currentSubTable = strdup($1+i+1);
+                                            char* oldMainTable = strdup(mainTable);
+
+                                            $1[i] = '\0';
+                                            mainTable = strdup($1);
+
+                                            if(strcmp(oldMainTable,mainTable) != 0 && strcmp(oldMainTable,"") && strcmp(oldSubTable,"") != 0) incomplete_for_tables2 = 2;
+                                            else incomplete_for_tables2 = 1;
+
+                                            char* temp;
+                                            if(incomplete_for_tables) temp = strdup("\t");
+                                            else temp = strdup("");
+
+                                            asprintf(&$$,"%s\"%s\" : {",temp,currentSubTable);
+                                            free(temp);
+                                            free(oldSubTable);
                                         }
-                                        incomplete_for_tables = 1;
-                                        asprintf(&$$,"\"%s\" : {",$1);
-                                        currentTable = strdup($1);
+                                        else{
+                                            if(!strcmp(currentTable,"")) {
+                                                dont_fix_it = 1;
+                                            }
+                                            incomplete_for_tables = 1;
+                                            asprintf(&$$,"\"%s\" : {",$1);
+                                            currentTable = strdup($1);
+                                            incomplete_for_tables2 = 0;
+                                            currentSubTable = strdup("");
+                                        }
+                                        currentKey = strdup("");
+                                        /* Se for table com main key omitida */ 
+                                        if(incomplete_for_tables2 == 2){
+                                            asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : {",mainTable,currentSubTable);    
+                                            incomplete_for_tables = 0;
+                                            incomplete_for_tables2 = 1; /* reposição do valor usual */
+                                        }
                                     }
+
 Key   : str                         {$$ = $1;}
 SubKey : str                        {$$ = $1;}
 Value : val                         {$$ = $1;}
