@@ -74,8 +74,12 @@ Lang  : Lang Pair '\n'          {
                                             if(flag)
                                                 asprintf(&$$,"%s,\n\t%s",$1,$2);
                                             else{
-                                                asprintf(&$$,"%s\n\t},\n\t%s",$1,$2);
+                                                char* temp;
+                                                if(incomplete_for_tables) temp = strdup("\t");
+                                                else temp = strdup("");
+                                                asprintf(&$$,"%s\n%s\t},\n\t%s",$1,temp,$2);
                                                 incomplete--;
+                                                free(temp);
                                             }
                                             dot_flag = 1;
                                         }
@@ -97,25 +101,28 @@ Lang  : Lang Pair '\n'          {
                                     }
                                     flag = 0;
                                 }
-      | Lang Table              {
-                                  if((incomplete > 0 || incomplete_for_tables) && !dont_fix_it){
-                                      char* temp;
-                                      if(incomplete_for_tables && incomplete) temp = strdup("\t}\n\t},");
-                                      else temp = strdup("},");
-                                      asprintf(&$$,"%s\n\t%s\n\t%s",$1,temp,$2); 
-                                      free(temp);
-                                      incomplete--;
-                                  }
-                                  else {
-                                      dont_fix_it = 0;
-                                      if(flag || dot_flag){
-                                          asprintf(&$$,"%s,\n\t%s",$1,$2);
-                                      }
-                                      else 
-                                          asprintf(&$$,"%s\n\t%s",$1,$2);
-                                  }
-                                  flag = 0;
-                                  dot_flag = 0;
+      | Lang Table              {   
+                                    if(incomplete > 0 || (incomplete_for_tables && !dont_fix_it)){
+                                        char* temp;
+                                        if((incomplete_for_tables && !dont_fix_it) && incomplete) temp = strdup("\t}\n\t},");
+                                        else temp = strdup("},");
+                                        asprintf(&$$,"%s\n\t%s\n\t%s",$1,temp,$2); 
+                                        free(temp);
+                                        incomplete--;
+                                    }
+                                    else {
+                                        dont_fix_it = 0;
+                                        if(flag || dot_flag){
+                                            asprintf(&$$,"%s,\n\t%s",$1,$2);
+                                        }
+                                        else 
+                                            asprintf(&$$,"%s\n\t%s",$1,$2);
+                                    }
+                                    flag = 0;
+                                    dot_flag = 0;
+                                }
+      | Lang Table'.'SubTable   {
+
                                 }
       |                         {$$ = "";}
       ;
@@ -135,22 +142,26 @@ Pair  : Key '=' Value           {
                                     free(temp);
                                 }
 DottedPair : Key'.'SubKey '=' Value {
-                                        /* Entra na primeira iteração e quando chave muda */
+                                        /* Entra quando chave muda */
                                         if(strcmp($1.valor.s,currentKey) != 0){
                                             dot_flag = 0;        
                                             if(!strcmp(currentKey,"")) {
                                                 dont_fix_it = 1;
                                             }
                                             incomplete++;
-
+                                            
                                             char* temp;
                                             if(incomplete_for_tables) temp = strdup("\t");
                                             else temp = strdup("");
                                             
-                                            if($5.uniontype == 0) asprintf(&$$,"\t\"%s\" : {\n\t\t%s\"%s\" : \"%s\"",$1.valor.s,temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 1) asprintf(&$$,"\t\"%s\" : {\n\t\t%s\"%s\" : %d",$1.valor.s,temp,$3.valor.s,$5.valor.n);
-                                            if($5.uniontype == 2) asprintf(&$$,"\t\"%s\" : {\n\t\t%s\"%s\" : %s",$1.valor.s,temp,$3.valor.s,$5.valor.s);
-                                            if($5.uniontype == 3) asprintf(&$$,"\t\"%s\" : {\n\t\t%s\"%s\" : %f",$1.valor.s,temp,$3.valor.s,$5.valor.f);
+                                            /*char temp2[100];
+                                            if($1.uniontype == 1) {printf("ENTREI\n"); sprintf(temp2,"%d",$1.valor.n);}
+                                            else strcpy(temp2,$1.valor.s);*/
+
+                                            if($5.uniontype == 0) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : \"%s\"",temp,$1.valor.s,temp,$3.valor.s,$5.valor.s);
+                                            if($5.uniontype == 1) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %d",temp,$1.valor.s,temp,$3.valor.s,$5.valor.n);
+                                            if($5.uniontype == 2) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %s",temp,$1.valor.s,temp,$3.valor.s,$5.valor.s);
+                                            if($5.uniontype == 3) asprintf(&$$,"%s\"%s\" : {\n\t\t%s\"%s\" : %f",temp,$1.valor.s,temp,$3.valor.s,$5.valor.f);
 
                                             free(temp);
 
@@ -176,6 +187,9 @@ Table : str                         {
                                         incomplete_for_tables = 1;
                                         asprintf(&$$,"\"%s\" : {",$1);
                                         currentTable = strdup($1);
+                                    }
+SubTable : str                      {
+                                    
                                     }
 Key   : val                         {$$ = $1;}
 SubKey : val                        {$$ = $1;}

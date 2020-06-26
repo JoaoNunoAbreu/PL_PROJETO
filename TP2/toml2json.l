@@ -17,6 +17,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 [\"\']                      {BEGIN entreAspas;initArray(&keyvalue,20);insertArray(&keyvalue,yytext[0]);}
 [0-9]+                      {yylval.info.uniontype = 1; yylval.info.valor.n = atoi(yytext); return val;}
 [A-Za-z0-9_-]+              {
+                                
                                 // Tirar o espaço
                                 if(yytext[yyleng-1] == ' ')
                                     yytext[yyleng-1] = '\0'; 
@@ -90,7 +91,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
                                 insertArray(&keyvalue,'\\');
                                 insertArray(&keyvalue,'\\');
                             }
-.                           {
+.                           {   
                                 insertArray(&keyvalue,yytext[0]);
                             }
 }
@@ -100,7 +101,7 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 <*>{
 #.*             {}
 [ ]             {}
-[\.]            {return yytext[0];} // Símbolos terminais
+\.              {return yytext[0];} // Símbolos terminais
 .               {yyerror("Simbolo desconhecido");}
 }
 

@@ -1,4 +1,6 @@
 ola = "adeus"
+vinte.fofa = "asdasdddd"
+vinte.ahah = "asdasdddd"
 
 [owner]
 name = "Tom Preston-Werner"
@@ -7,17 +9,19 @@ bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
 dob.offa = "pixarrelha"
 dob.offb = "pixarrelha"
 dob.offc = "pixarrelha"
-name = "asdasd"
+namad = "asdasd"
 dasd.dddd = "pixarrelha"
 dasd.ahahah = "pixarrelha"
+panela.lar = "ddd"
+panela.filho = 123
 
 [doce]
 namu = "Tom Preston-Werner"
 organization = "GitHub"
 bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
 dob.offa = "pixarrelha"
-dob.offa = "pixarrelha"
-dob.offa = "pixarrelha"
+dob.offc = "pixarrelha"
+dob.offv = "pixarrelha"
 name = "asdasd"
 dasd.dddd = "pixarrelha"
 dasd.ahahah = "pixarrelha"

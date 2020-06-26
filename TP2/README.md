@@ -12,5 +12,6 @@
 * https://github.com/toml-lang/toml 
 * https://en.wikipedia.org/wiki/TOML
 * https://pseitz.github.io/toml-to-json-online-converter/ (Conversor TOML -> JSON)
+* https://www.toml-lint.com/ (TOML validator)
 * https://jsonlint.com/ (JSON validator)
 * https://toml.io/en/v1.0.0-rc.1  (Syntax TOML)
