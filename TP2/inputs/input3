@@ -1,4 +1,23 @@
-int1 = +99
-int2 = 42
-int3 = 0
-int4 = -17
+ola = "adeus"
+
+[owner]
+name = "Tom Preston-Werner"
+organization = "GitHub"
+bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
+dob.offa = "pixarrelha"
+dob.offb = "pixarrelha"
+dob.offc = "pixarrelha"
+name = "asdasd"
+dasd.dddd = "pixarrelha"
+dasd.ahahah = "pixarrelha"
+
+[doce]
+namu = "Tom Preston-Werner"
+organization = "GitHub"
+bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
+dob.offa = "pixarrelha"
+dob.offa = "pixarrelha"
+dob.offa = "pixarrelha"
+name = "asdasd"
+dasd.dddd = "pixarrelha"
+dasd.ahahah = "pixarrelha"
