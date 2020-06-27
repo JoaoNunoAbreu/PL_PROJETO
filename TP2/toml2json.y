@@ -52,7 +52,8 @@ TOML  : Lang                    {   printf("%d, %d, %d\n",incomplete,incomplete_
                                     else if(incomplete || incomplete_for_tables || incomplete_for_tables2)
                                         printf("{\t%s\n\t}\n}",$1);
                                     else 
-                                        printf("{\t%s\n}",$1);}
+                                        printf("{\t%s\n}",$1);
+                                }
 
 Lang  : Lang Pair '\n'          {   
                                     if(incomplete){
@@ -108,12 +109,12 @@ Lang  : Lang Pair '\n'          {
                                     }
                                     flag = 0;
                                 }
-      | Lang Table              {   printf("%d, %d, %d, %d\n",incomplete,incomplete_for_tables,incomplete_for_tables2,dont_fix_it);
+      | Lang Table              {   printf("%d, %d, %d, %d, mainTable = %s, currentSubTable = %s, currentTable = %s\n",incomplete,incomplete_for_tables,incomplete_for_tables2,dont_fix_it,mainTable,currentSubTable,currentTable);
                                     if(incomplete || (incomplete_for_tables && !dont_fix_it) || (incomplete_for_tables2 && !dont_fix_it)){
                                         char* temp;
                                         if(incomplete && incomplete_for_tables && incomplete_for_tables2)
                                             temp = strdup("\t\t}\n\t\t},");
-                                        else if((incomplete_for_tables && incomplete) || (incomplete_for_tables && !incomplete_for_tables2) || (!incomplete_for_tables && incomplete_for_tables2)) {
+                                        else if((incomplete_for_tables && incomplete && !dont_fix_it) || (incomplete_for_tables && !incomplete_for_tables2 && !incomplete && strcmp(mainTable,"") != 0) || (!incomplete_for_tables && incomplete_for_tables2)) {
                                             temp = strdup("\t}\n\t},");
                                             if(incomplete_for_tables == 0) incomplete_for_tables = 1;
                                         }
@@ -200,7 +201,7 @@ Table : str                         {
                                             $1[i] = '\0';
                                             mainTable = strdup($1);
 
-                                            if(strcmp(oldMainTable,mainTable) != 0 && strcmp(oldMainTable,"") && strcmp(oldSubTable,"") != 0) incomplete_for_tables2 = 2;
+                                            if(strcmp(oldMainTable,mainTable) != 0 && !strcmp(oldMainTable,"") && strcmp(oldSubTable,"") != 0) incomplete_for_tables2 = 2;
                                             else incomplete_for_tables2 = 1;
 
                                             char* temp;
