@@ -7,31 +7,38 @@ int inside_array = 0;
 %}
 
 %option noyywrap yylineno
-%x key value entreAspas emArray
+%x key value entreAspas
 WHITESPACES ([ \n\t\r]+)
 OffsetDateTime (([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])([Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))?)?)
 LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 %%
 
 
-[=]                         {BEGIN value;return yytext[0];}
-[\"\']                      {BEGIN entreAspas;initArray(&keyvalue,20);insertArray(&keyvalue,yytext[0]);}
-[A-Za-z0-9_-]+              {
-                                
-                                // Tirar o espaço
-                                if(yytext[yyleng-1] == ' ')
-                                    yytext[yyleng-1] = '\0'; 
+[=]                                         {   /* ------------------- Fim de Key ------------------- */
+                                                BEGIN value;
+                                                return yytext[0];
+                                            }
+[\"\']                                      {   /* ------------------- Quoted Keys ------------------- */
+                                                BEGIN entreAspas;
+                                                initArray(&keyvalue,20);
+                                                insertArray(&keyvalue,yytext[0]);
+                                            }
+[A-Za-z0-9_-]+                              {   /* ------------------- Bare Keys ------------------- */
+                                                // Tirar o espaço
+                                                if(yytext[yyleng-1] == ' ')
+                                                    yytext[yyleng-1] = '\0'; 
 
-                                yylval.string = strdup(yytext); 
-                                return str;
-                            }
-\[[.A-Za-z0-9_-]+\]         {   /* ------------------- Tables ------------------- */
-                                yytext[yyleng-1] = '\0'; 
-                                yylval.string = strdup(yytext+1); 
-                                return str;
-                            }
-[\n]                        {} /* Para ignorar espaços entre pares */
+                                                yylval.string = strdup(yytext); 
+                                                return str;
+                                            }
+\[[.A-Za-z0-9_-]+\]                         {   /* ------------------- Tables ------------------- */
+                                                yytext[yyleng-1] = '\0'; 
+                                                yylval.string = strdup(yytext+1); 
+                                                return str;
+                                            }
+[\n]                                        {} /* Para ignorar espaços entre pares */
 
+    /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 <value>{
 [\n]                                        {if(!inside_array) {BEGIN 0; return yytext[0];}}
@@ -45,67 +52,67 @@ LocalTime (([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?)
 ,                                           {return yytext[0];}
 }
 
-<entreAspas>{
-(\"\"\"|\'\'\')/[\ \n#]     {   /* Representa o fim de multi line strings */
-                                BEGIN value;
-                                yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
-                                yylval.info.uniontype = 0;
-                                inside_3_quotes = 0;
-                                return val;
-                            }
-\\\"                        {
-                                if(aspaOrPelica(&keyvalue) == 0){
-                                    insertArray(&keyvalue,'\\');
-                                }
-                                insertArray(&keyvalue,'\"');
-                            }
-[\"]                        {   
-                                if(aspaOrPelica(&keyvalue) == 0 && !inside_3_quotes){
-                                    BEGIN value;
-                                    yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
-                                    yylval.info.uniontype = 0;
-                                    return val;
-                                }
-                                else if(aspaOrPelica(&keyvalue) == 1 || inside_3_quotes) {
-                                    insertArray(&keyvalue,'\\');
-                                    insertArray(&keyvalue,yytext[0]);
-                                }
-                            }
-[\']                        {
-                                if(aspaOrPelica(&keyvalue) == 1 && inside_3_quotes){
+    /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-                                }
-                                else if(aspaOrPelica(&keyvalue) == 1 && !inside_3_quotes){
-                                    BEGIN value;
-                                    yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
-                                    yylval.info.uniontype = 0;
-                                    return val;
-                                }
-                                else if(aspaOrPelica(&keyvalue) == 0 || inside_3_quotes) {
-                                    insertArray(&keyvalue,yytext[0]);
-                                }
-                            }
-\\\n{WHITESPACES}           {}         
-\n                          {
-                                insertArray(&keyvalue,'\\');
-                                insertArray(&keyvalue,'n');
-                            }
-\\[^tnr]                    {
-                                insertArray(&keyvalue,'\\');
-                                insertArray(&keyvalue,'\\');
-                            }
-.                           {   
-                                insertArray(&keyvalue,yytext[0]);
-                            }
+<entreAspas>{
+(\"\"\"|\'\'\')/[\ \n#]                     {   /* Representa o fim de multi line strings */
+                                                BEGIN value;
+                                                yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
+                                                yylval.info.uniontype = 0;
+                                                inside_3_quotes = 0;
+                                                return val;
+                                            }
+\\\"                                        {
+                                                if(aspaOrPelica(&keyvalue) == 0){
+                                                    insertArray(&keyvalue,'\\');
+                                                }
+                                                insertArray(&keyvalue,'\"');
+                                            }
+[\"]                                        {   
+                                                if(aspaOrPelica(&keyvalue) == 0 && !inside_3_quotes){
+                                                    BEGIN value;
+                                                    yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
+                                                    yylval.info.uniontype = 0;
+                                                    return val;
+                                                }
+                                                else if(aspaOrPelica(&keyvalue) == 1 || inside_3_quotes) {
+                                                    insertArray(&keyvalue,'\\');
+                                                    insertArray(&keyvalue,yytext[0]);
+                                                }
+                                            }
+[\']                                        {
+                                                if(aspaOrPelica(&keyvalue) == 1 && inside_3_quotes){
+                                                
+                                                }
+                                                else if(aspaOrPelica(&keyvalue) == 1 && !inside_3_quotes){
+                                                    BEGIN value;
+                                                    yylval.info.valor.s = strdup(getText(&keyvalue)+1); 
+                                                    yylval.info.uniontype = 0;
+                                                    return val;
+                                                }
+                                                else if(aspaOrPelica(&keyvalue) == 0 || inside_3_quotes) {
+                                                    insertArray(&keyvalue,yytext[0]);
+                                                }
+                                            }
+\\\n{WHITESPACES}                           {}         
+\n                                          {
+                                                insertArray(&keyvalue,'\\');
+                                                insertArray(&keyvalue,'n');
+                                            }
+\\[^tnr]                                    {
+                                                insertArray(&keyvalue,'\\');
+                                                insertArray(&keyvalue,'\\');
+                                            }
+.                                           {   
+                                                insertArray(&keyvalue,yytext[0]);
+                                            }
 }
 
-
-
 <*>{
-#.*             {}
-[ ]             {}
-\.              {return yytext[0];} // Símbolos terminais
-.               {yyerror("Simbolo desconhecido");}
+#.*                                         {}
+[ ]                                         {}
+\.                                          {return yytext[0];} // Símbolos terminais
+.                                           {yyerror("Simbolo desconhecido");}
 }
 
 %%

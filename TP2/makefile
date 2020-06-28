@@ -8,8 +8,9 @@ $E: $E.y $E.l
 
 #fazer make teste em vez de executar só o programa
 #faz com que mostre o output do flex para cada linha
-teste: $E $I
-	./$E < $I| paste -d : $I - | column -t -s :
+run: $E $I
+	./$E < $I > output
+	open output
 
 clean:
 	rm -f y.tab.c lex.yy.c $E

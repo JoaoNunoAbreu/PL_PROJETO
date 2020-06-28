@@ -42,7 +42,7 @@ char* mainTable = "";
 %type <info> Value val 
 %%
 
-TOML  : Lang                    {   printf("%d, %d, %d\n",incomplete,incomplete_for_tables,incomplete_for_tables2);
+TOML  : Lang                    {   
                                     if(incomplete && incomplete_for_tables && incomplete_for_tables2)
                                         printf("{\t%s\n\t\t\t}\n\t\t}\n\t}\n}",$1);
                                     else if(incomplete && incomplete_for_tables)
