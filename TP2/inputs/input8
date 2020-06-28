@@ -1,0 +1,3 @@
+nested_mixed_array = [ "hugo",[ 1, [2] ],'joao','tigas',112, ["a", "b", "c"] ,[1,2,3]]
+nested_mixed.ola = [ 123,'joao','tigas',112,[123,2323,121],114,116,"dsdsds"]
+nested_mixed.ola = [ 123,'joao','tigas',112,[123,2323,121],114,116,"dsdsds"]

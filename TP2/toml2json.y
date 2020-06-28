@@ -38,7 +38,7 @@ char* mainTable = "";
 }
 
 %token val str
-%type <string> str Table Pair Lang DottedPair Key SubKey
+%type <string> str Table Pair Lang DottedPair Key SubKey Array Elem
 %type <info> Value val 
 %%
 
@@ -109,7 +109,7 @@ Lang  : Lang Pair '\n'          {
                                     }
                                     flag = 0;
                                 }
-      | Lang Table              {   printf("%d, %d, %d, %d, mainTable = %s, currentSubTable = %s, currentTable = %s\n",incomplete,incomplete_for_tables,incomplete_for_tables2,dont_fix_it,mainTable,currentSubTable,currentTable);
+      | Lang Table              {   
                                     if(incomplete || (incomplete_for_tables && !dont_fix_it) || (incomplete_for_tables2 && !dont_fix_it)){
                                         char* temp;
                                         if(incomplete && incomplete_for_tables && incomplete_for_tables2)
@@ -150,6 +150,13 @@ Pair  : Key '=' Value           {
                                     if($3.uniontype == 3) asprintf(&$$,"%s\"%s\" : %f",temp,$1,$3.valor.f);    
                                     free(temp);
                                 }
+      | Key '=' Array           {
+                                    char* temp = strdup($3);
+                                    temp[strlen(temp)-2] = ']';
+                                    temp[strlen(temp)-1] = '\0';
+                                    asprintf(&$$,"\"%s\" : %s",$1,temp);
+                                    free(temp);
+                                }    
 DottedPair : Key'.'SubKey '=' Value {
                                         /* Entra quando chave muda */
                                         if(strcmp($1,currentKey) != 0){
@@ -185,6 +192,20 @@ DottedPair : Key'.'SubKey '=' Value {
                                             free(temp);
                                         }
                                     }
+           | Key'.'SubKey '=' Array {
+                                        if(strcmp($1,currentKey) != 0){
+                                            dot_flag = 0;        
+                                            if(!strcmp(currentKey,"")) {
+                                                dont_fix_it = 1;
+                                            }
+                                            incomplete = 1;
+                                            asprintf(&$$,"\"%s\" : {\n\t\t\"%s\" : %s",$1,$3,$5);
+                                            currentKey = strdup($1);
+                                        }
+                                        else{
+                                            asprintf(&$$,"\t\"%s\" : %s",$3,$5);
+                                        }
+                                    }    
 Table : str                         {   
                                         
                                         int i;
@@ -230,6 +251,38 @@ Table : str                         {
                                             incomplete_for_tables2 = 1; /* reposição do valor usual */
                                         }
                                     }
+
+Array : '[' Elem ']'            {
+                                    asprintf(&$$,"[\n%s\n\t\t]",$2);
+                                }
+Elem  : Value                   {
+
+                                    if($1.uniontype == 0)
+                                        asprintf(&$$,"\t\t\"%s\"",$1.valor.s);
+                                    if($1.uniontype == 1)
+                                        asprintf(&$$,"\t\t%d",$1.valor.n);
+                                    if($1.uniontype == 2)
+                                        asprintf(&$$,"\t\t%s",$1.valor.s);
+                                    if($1.uniontype == 3)
+                                        asprintf(&$$,"\t\t%f",$1.valor.f);
+                                }
+      | Elem ',' Value          {
+                                    if($3.uniontype == 0)
+                                        asprintf(&$$,"%s,\n\t\t\"%s\"",$1,$3.valor.s);
+                                    if($3.uniontype == 1)
+                                        asprintf(&$$,"%s,\n\t\t%d",$1,$3.valor.n);
+                                    if($3.uniontype == 2)
+                                        asprintf(&$$,"%s,\n\t\t%s",$1,$3.valor.s);
+                                    if($3.uniontype == 3)
+                                        asprintf(&$$,"%s,\n\t\t%f",$1,$3.valor.f);
+                                }
+      | Array                   {
+                                    asprintf(&$$,"\t\t%s",$1);
+                                }
+      | Elem ',' Array          {
+                                    asprintf(&$$,"%s,\n\t\t%s",$1,$3); 
+                                }
+      ;
 
 Key   : str                         {$$ = $1;}
 SubKey : str                        {$$ = $1;}
