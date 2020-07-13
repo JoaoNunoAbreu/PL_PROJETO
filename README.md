@@ -6,3 +6,7 @@ Grupo:
 * João Nuno Abreu
 * Hugo Matias
 * João Coutinho
+
+Notas:
+* TP1 - 15
+* TP2 - 17

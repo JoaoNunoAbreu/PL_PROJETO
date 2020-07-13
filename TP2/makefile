@@ -1,5 +1,5 @@
 E=toml2json
-I=inputs/input3
+I=inputs/invalids
 
 $E: $E.y $E.l
 	yacc $E.y
